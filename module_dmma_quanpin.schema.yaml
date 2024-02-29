@@ -1,0 +1,9 @@
+schema:
+ schema_id: module_dmma_quanpin
+ name: 「插件_辅助码_全拼」
+translator: {dictionary: module_dmma_quanpin}
+speller:
+ algebra:
+  - {__include: ts_cn.schema.yaml:/module_dmma/comment_format/@0}
+  - 'xform/[A-Z]/\L$0/'
+  - "xform/'//"

@@ -1,0 +1,7 @@
+recorder/recorder_*
+*.userdb
+build
+user.yaml
+installation.yaml
+rime-ice/*
+sync

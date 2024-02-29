@@ -1,0 +1,33 @@
+---
+name: custom_phrase
+version: "0"
+---
+abcdefghijklmnopqrstuvwxyz	R
+bpmfdtnlgkhjqxvuirzcsywaoe	R
+bpmfdtnlgkhjqxvuirzcsyw	R
+ABCDEFGHIJKLMNOPQRSTUVWXYZ	RR
+BPMFDTNLGKHJQXVUIRZCSYWAOE	RR
+BPMFDTNLGKHJQXVUIRZCSYW	RR
+2465403648	QQ
+2465403648@qq.com	QQ
+蹄垫HoofCushion	tidm
+(?<=)	Q
+(?=)	Q
+(?<!)	Q
+(?!)	Q
+()@<=	Qv
+()@=	Qv
+()@<!	Qv
+()@!	Qv
+()	W
+[]	W
+{}	W
+$^	W
+*	E
+?	E
++	E
+(){,}	E
+[a-z]	A
+[A-Z]	A
+[0-9]	A
+\S	A
