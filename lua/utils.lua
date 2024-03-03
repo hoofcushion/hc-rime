@@ -62,55 +62,34 @@ function M.toSimpleCand(cand)
  ncand.preedit=cand.preedit
  return ncand
 end
-M.keyMap=
-{
- ["space"]=-1,
- ["0"]=9,
- ["1"]=0,
- ["2"]=1,
- ["3"]=2,
- ["4"]=3,
- ["5"]=4,
- ["6"]=5,
- ["7"]=6,
- ["8"]=7,
- ["9"]=8,
-}
+---@type table<integer,integer>
+M.select_keys={}
 function M.keyMapInitialize(env)
  local select_keys=env.engine.schema.select_keys
- if select_keys and select_keys~="" then
-  M.keyMap={["space"]=-1}
-  local count=0
-  for substr in select_keys:gmatch(".") do
-   M.keyMap[substr]=count
-   count=count+1
+ if select_keys==nil then
+  for char,value in
+  pairs({["1"]=0,["2"]=1,["3"]=2,["4"]=3,["5"]=4,["6"]=5,["7"]=6,["8"]=7,["9"]=8,["0"]=9})
+  do
+   map[string.byte(char)]=value
   end
+ elseif select_keys~="" then
+  local map={}
+  local i=0
+  for substr in select_keys:gmatch(".") do
+   map[substr]=i
+   i=i+1
+  end
+  M.select_keys=map
  end
 end
-function M.move_true_index(key,env)
- local index <const> = M.keyMap[key:repr()]
- if not index then
-  return false
- end
- local seg <const> = env.engine.context.composition:back()
- if index>-1 then
+function M.move_relative_index_by_key(key,env)
+ local index <const> = M.select_keys[key.keycode]
+ if index~=nil and index>0 then
+  local seg <const> = env.engine.context.composition:back()
   local page_size <const> = env.engine.schema.page_size
   seg.selected_index=index+math.floor(seg.selected_index/page_size)*page_size
+  return true
  end
- return true
-end
-function M.table_deep_copy(tab)
- local ret={}
- for k,v in next,tab do
-  ret[k]=v
- end
- return ret
-end
-function M.table_extend(main,sub)
- local ret=M.table_deep_copy(main)
- for k,v in next,sub do
-  ret[k]=v
- end
- return ret
+ return false
 end
 return M

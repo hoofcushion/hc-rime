@@ -8,7 +8,6 @@ patch:
     - schema: ts_cn_quanpin
     - schema: ts_triple
     - schema: ts_en
-    - schema: ts_mini_linga
     - schema: ts_fanganlianxi
   switcher:
     abbreviate_options: true

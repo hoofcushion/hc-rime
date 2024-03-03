@@ -4,25 +4,17 @@ local H={
  start_key="",
 }
 local M <const> = {}
-local keyMap <const> = {
- [1]=1,
- [2]=2,
- [3]=3,
- [4]=4,
- [5]=5,
- [6]=6,
- [7]=7,
- [8]=8,
- [9]=9,
- [0]=-1,
-}
+local keyMap <const> = {}
 do
- for key,v in pairs(keyMap) do
-  keyMap[key]=nil
+ for key,v in
+ pairs({[0]=-1,1,2,3,4,5,6,7,8,9})
+ do
   keyMap[string.byte(key)]=v
  end
  local i=1
- for char in string.gmatch("qwertyuiopasdfghjkl;zxcvbnm,./",".") do
+ for char in
+ string.gmatch("qwertyuiopasdfghjkl;zxcvbnm,./",".")
+ do
   keyMap[string.byte(char)]=i
   i=i%10+1
  end
@@ -47,7 +39,7 @@ end
 local Actions <const> = {
  [false]={
   start=function(ctx)
-   H.wrap_mode=true
+   H.warp_mode=true
    ctx.caret_pos=0
    ctx.caret_pos=#ctx.input
    Utils.tipsCtx(ctx,"跳转模式")
@@ -56,18 +48,18 @@ local Actions <const> = {
  },
  [true]={
   start=function(ctx)
-   H.wrap_mode=false
+   H.warp_mode=false
    Utils.tipsCtx(ctx,"跳转关闭")
    return 1
   end,
   move=function(ctx,target)
-   H.wrap_mode=false
+   H.warp_mode=false
    ctx.caret_pos=get_pos(ctx:get_script_text(),target)
    Utils.tipsCtx(ctx,"跳转完毕")
    return 1
   end,
   stop=function()
-   H.wrap_mode=false
+   H.warp_mode=false
    return 2
   end,
  },
@@ -85,7 +77,7 @@ function M.func(key,env)
  end
  local ctx <const> = env.engine.context
  if ctx:has_menu()==false then
-  H.wrap_mode=false
+  H.warp_mode=false
   return 2
  end
  local keyName <const> = key:repr()
@@ -100,7 +92,7 @@ function M.func(key,env)
    action="stop"
   end
  end
- local fn=Actions[H.wrap_mode][action]
+ local fn=Actions[H.warp_mode][action]
  if fn~=nil then
   return fn(ctx,target)
  end

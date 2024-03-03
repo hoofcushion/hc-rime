@@ -12,7 +12,7 @@ local processor <const> =
   local ctx <const> = env.engine.context
   if ctx:has_menu() and ctx:get_option(option_name) then
    local seg <const> = ctx.composition:back()
-   if not Utils.move_true_index(key,env) then
+   if not Utils.move_relative_index_by_key(key,env) then
     return 2
    end
    if seg:get_selected_candidate()._end~=#ctx.input then

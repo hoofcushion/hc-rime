@@ -10,7 +10,7 @@ function M.func(key,env)
  local ctx <const> = env.engine.context
  if ctx:has_menu() then
   local seg <const> = ctx.composition:back()
-  if not Utils.move_true_index(key,env) then
+  if not Utils.move_relative_index_by_key(key,env) then
    return 2
   end
   local cand <const> = seg:get_selected_candidate()

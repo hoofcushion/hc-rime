@@ -1,4 +1,5 @@
 recorder/recorder_*
+recorder/output
 *.userdb
 build
 user.yaml

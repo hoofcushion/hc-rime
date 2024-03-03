@@ -2,20 +2,11 @@ local OUTPUT="output"
 local function loadInput(minWeight,mapOriginal)
  local map={}
  local file=io.open("recorder_words.txt","r")
- if not file then error("没有 input 文件") end
- if minWeight==0 then
-  for line in file:lines() do
-   local k,v=line:match("^(.-)\t([0-9]-)$")
-   if k and not mapOriginal[k] then
-    table.insert(map,{k,v})
-   end
-  end
- else
-  for line in file:lines() do
-   local k,v=line:match("^(.-)\t([0-9]-)$")
-   if k and tonumber(v)>minWeight and not mapOriginal[k] then
-    table.insert(map,{k,v})
-   end
+ if file==nil then error("No file recorder_words.txt") end
+ for line in file:lines() do
+  local k,v=line:match("^(.-)\t([0-9]-)$")
+  if k and mapOriginal[k]==nil and tonumber(v)>minWeight then
+   table.insert(map,{k,v})
   end
  end
  file:close()
@@ -46,10 +37,10 @@ local function writeOutput(mapInput)
 end
 local function loadDict(map,path)
  local file=io.open(path,"r")
- if not file then error(path.." 词典未找到") end
+ if file==nil then error(path.." 词典未找到") end
  for line in file:lines() do
-  local k=line:match("^(.-)\t.-[0-9]-$")
-  if k and not map[k] then
+  local k=line:match("^(.-)\t")
+  if k and map[k]==nil then
    map[k]=true
   end
  end
