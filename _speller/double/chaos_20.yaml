@@ -1,6 +1,5 @@
-module_dmma: {comment_format: ["xlit/ZCSBH/vuiee/"]}
 module_fnua_cn:
- comment_format: &comment
+ comment_format:
   - xform/\<shi\>/_eo_/
   - xform/\<reng\>/_ur_/
   - xform/\<zi\>/_wo_/

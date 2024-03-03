@@ -16,7 +16,6 @@ __patch:
  schema/dependencies/+:
   - ts_en # 英文
   - module_cn_en # 混输
-  - module_dmma # 辅助码
   - module_fnua_cn # 反查
 __patch:
  - engine/processors/@after 7:      "lua_processor@reverse_pro"
@@ -24,8 +23,6 @@ __patch:
  - engine/processors/@after 4:      "lua_processor@quick_warp"
  - engine/segmentors/@after 1:      "affix_segmentor@module_fnua_cn"
  - engine/translators/@before last: "lua_translator@module_fnua_cn"
- - engine/translators/@after last:  "lua_translator@module_dmma_upper@module_dmma"
- - engine/translators/@after last:  "lua_translator@module_dmma"
  - engine/translators/@after last:  "lua_translator@ts_cn@translator"
  - engine/translators/@after last:  "lua_translator@ts_en@module_en"
  - engine/translators/@after last:  "lua_translator@module_cn_en"
@@ -35,7 +32,6 @@ module_lock: {initial_quality: 1, dictionary: module_lock, enable_user_dict: fal
 translator: {initial_quality: 1, dictionary: ts_cn, user_dict: ts_cn_double, prism: ts_cn_double}
 module_cn_en: {initial_quality: 1, dictionary: module_cn_en, user_dict: module_cn_en}
 module_en: {__include: ts_en.schema.yaml:/translator, tag: ts_en}
-module_dmma: {initial_quality: 1, dictionary: module_dmma, enable_user_dict: false, spelling_hints: 99}
 module_fnua_cn: {prefix: "`", tag: module_fnua_cn, tips: 〔拼音反查〕, dictionary: module_fnua_cn, spelling_hints: 99, enable_user_dict: false}
 recognizer:
  lua:
