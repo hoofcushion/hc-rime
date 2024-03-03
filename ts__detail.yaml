@@ -7,11 +7,10 @@ engine:
   - ascii_composer
   - recognizer
   - key_binder
+  - lua_processor@keymap
   - speller
   - lua_processor@smart_punct
   - punctuator
-  - lua_processor@plain_return
-  - lua_processor@force_escape
   - selector
   - navigator
   - express_editor

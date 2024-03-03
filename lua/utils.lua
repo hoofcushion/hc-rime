@@ -38,22 +38,22 @@ function M.tipsCtx(ctx,str,add)
 end
 ---@param str string
 ---@param start integer
----@param final integer
+---@param final integer|nil
 ---@return string
 function M.utf8_sub(str,start,final)
  local len_p <const> = #str+1
- if final then
+ if final==nil then
   local i1 <const> = start<0 and len_p or 1
-  local i2 <const> = final<0 and len_p or 1
-  final=final+1
-  start,final=utf8.offset(str,start,i1),utf8.offset(str,final,i2)
-  final=final-1
-  str=string.sub(str,start,final)
+  start=utf8.offset(str,start,i1)
+  str=string.sub(str,start)
   return str
  end
  local i1 <const> = start<0 and len_p or 1
- start=utf8.offset(str,start,i1)
- str=string.sub(str,start)
+ local i2 <const> = final<0 and len_p or 1
+ final=final+1
+ start,final=utf8.offset(str,start,i1),utf8.offset(str,final,i2)
+ final=final-1
+ str=string.sub(str,start,final)
  return str
 end
 function M.toSimpleCand(cand)

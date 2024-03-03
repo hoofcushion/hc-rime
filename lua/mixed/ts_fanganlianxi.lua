@@ -2,7 +2,7 @@ local Utils <const> = require("utils")
 local dict={}
 do
  local word={}
- local file=std.rime_file_open(("ts_fanganlianxi.txt"),"r")
+ local file=Utils.rime_file_open(("ts_fanganlianxi.txt"),"r")
  for line in file:lines() do
   local a,b=line:match("^(.-)\t(.+)$")
   if a then
@@ -11,7 +11,7 @@ do
  end
  file:close()
  local map={}
- file=std.rime_file_open(("ts_fanganlianxi_algebra.txt"),"r")
+ file=Utils.rime_file_open(("ts_fanganlianxi_algebra.txt"),"r")
  for line in file:lines() do
   local a,b=line:match("^(.-)\t(.+)$")
   if a then

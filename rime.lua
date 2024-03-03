@@ -1,11 +1,8 @@
-std                =require("std")
 -- package.path      = "./lua/?.lua;" .. package.path
 reverse_pro        =require("processor/reverse_pro")
-select_char        =require("processor/select_char")
 quick_warp         =require("processor/quick_warp")
-plain_return       =require("processor/plain_return")
+keymap             =require("processor/keymap")
 smart_punct        =require("processor/smart_punct")
-force_escape       =require("processor/force_escape")
 module_cn_en       =require("translator/module_cn_en")
 module_fnua_cn     =require("translator/module_fnua_cn")
 module_fnua_triple =require("translator/module_fnua_triple")

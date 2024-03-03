@@ -1,10 +1,11 @@
+local hc=require("hclib")
 local Utils <const> = require("utils")
 local M <const> = {}
 local default_opts <const> = {
  syllableLength=2,
 }
 function M.new(user_opts)
- local opts <const> = std.tbl_deep_extend(default_opts,"force",user_opts)
+ local opts <const> = hc.tbl_deep_extend("force",default_opts,user_opts)
  local T <const> = {}
  local Translator
  T.init=function(env)
