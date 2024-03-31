@@ -1,8 +1,12 @@
-local OUTPUT="output"
+local OUTPUT="output.txt"
+local function popen(filename,mode)
+ local file=io.open(filename,mode)
+ if file==nil then error("No file: "..filename) end
+ return file
+end
 local function loadInput(minWeight,mapOriginal)
  local map={}
- local file=io.open("recorder_words.txt","r")
- if file==nil then error("No file recorder_words.txt") end
+ local file=popen("word.txt","r")
  for line in file:lines() do
   local k,v=line:match("^(.-)\t([0-9]-)$")
   if k and mapOriginal[k]==nil and tonumber(v)>minWeight then
@@ -25,19 +29,15 @@ local function loadWeight()
  return minWeight
 end
 local function writeOutput(mapInput)
- io.open(OUTPUT,"w"):close()
- local file=io.open(OUTPUT,"a")
- if file==nil then
-  error("Not File:"..OUTPUT)
- end
+ popen(OUTPUT,"w"):close()
+ local file=popen(OUTPUT,"a")
  for _,v in ipairs(mapInput) do
   file:write(table.concat(v,"\t").."\n")
  end
  file:close()
 end
 local function loadDict(map,path)
- local file=io.open(path,"r")
- if file==nil then error(path.." 词典未找到") end
+ local file=popen(path,"r")
  for line in file:lines() do
   local k=line:match("^(.-)\t")
   if k and map[k]==nil then
@@ -56,8 +56,10 @@ local function loadDicts()
 end
 local input="r"
 local mapOriginal
-repeat
- if input=="r" then
+while true do
+ if input=="q" then
+  return
+ elseif input=="r" then
   input=false
   print("正在读取原始词库")
   mapOriginal=loadDicts()
@@ -69,4 +71,4 @@ repeat
  print("生成完毕")
  print("r: 重新读取 dict 文件\nq: 退出程序\n回车: 重新生成去重词库")
  input=io.read()
-until input=="q"
+end

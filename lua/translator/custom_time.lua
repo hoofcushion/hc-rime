@@ -1,8 +1,8 @@
-local Utils <const> = require("utils")
-local global_comment <const> =""
+local Utils=require("utils")
+local global_comment=""
 local Time_Table,Reverse={},{}
 do
- local inputTable <const> =dofile(Utils.rime_file_exist("custom_time.txt"))
+ local inputTable=dofile(Utils.rime_file_exist("custom_time.txt"))
  --优化算法,将数组优化为哈希表索引,将时间复杂度缩减为O(1)
  for index,entry in ipairs(inputTable) do -- 遍历条
   for _,item in ipairs(entry) do          -- 遍历目
@@ -10,7 +10,7 @@ do
   end
   table.insert(Time_Table,entry)          -- 将条目插入Time_Table
   for _,code in ipairs(entry.codes) do    -- 为编码建立索引
-   if not Reverse[code] then
+   if Reverse[code]==nil then
     Reverse[code]={}
    end
    table.insert(Reverse[code],index) -- 插入索引
@@ -18,7 +18,7 @@ do
  end
 end
 -- local function timeDebug(input)
---  if not Reverse[input] then return "编码不存在" end
+--  if Reverse[input]==nil then return "编码不存在" end
 --  for _,index in ipairs(Reverse[input]) do
 --   local entry=Time_Table[index]
 --   for _,item in ipairs(entry) do
@@ -30,15 +30,15 @@ end
 -- end
 -- timeDebug("week")
 return function(input,seg,env)
- if not Reverse[input] then
+ if Reverse[input]==nil then
   return
  end
  Utils.tipsEnv(env,"〔时间输出〕",true)
  for _,index in ipairs(Reverse[input]) do
-  local entry <const> =Time_Table[index]
+  local entry=Time_Table[index]
   for _,item in ipairs(entry) do
    local text <const>   =item.text()
-   local comment <const> =item.comment or entry.comment or global_comment
+   local comment=item.comment or entry.comment or global_comment
    local cand <const>   =Candidate("time_cand",seg.start,seg._end,text,comment)
    cand.quality         =8102
    yield(cand)

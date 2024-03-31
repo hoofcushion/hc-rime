@@ -1,16 +1,16 @@
 local tran
-local translator <const> =
+local translator=
 {
  init=function(env)
   tran=Component.Translator(env.engine,"","script_translator@"..env.name_space)
  end,
  func=function(input,seg)
-  local query <const> =tran:query(input,seg)
-  if not query then
+  local query=tran:query(input,seg)
+  if query==nil then
    return
   end
   for cand in query:iter() do
-   local cmt <const> =cand.comment
+   local cmt=cand.comment
    cand.comment=""
    if cand.type~="sentence" then
     yield(ShadowCandidate(cand,"fancha",cmt,cand.text:sub(1,-2)))

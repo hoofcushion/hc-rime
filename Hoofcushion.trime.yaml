@@ -1,0 +1,801 @@
+# Trime default style settings
+# encoding: utf-8
+# config_version: "3.2.15"
+name: '蹄垫主题' #主题名称
+size:
+ keyboard:
+  firsth: &firsth 36
+  inputh: &inputh 48
+  bottomh: &bottomh 50
+  width_per10_100:
+   - &width_per10_75 7.5
+   - &width_per10_100 10
+   - &width_per10_125 12.5
+   - &width_per10_150 15
+   - &width_per10_175 17.5
+   - &width_per10_200 20
+   - &width_per10_300 30
+   - &width_per10_350 35
+   - &width_per10_400 40
+  width_per11_100:
+   - &width_per11_50 4.5454545454545
+   - &width_per11_100 9.0909090909091
+   - &width_per11_125 11.363636363636
+   - &width_per11_150 13.636363636364
+   - &width_per11_175 15.909090909091
+   - &width_per11_150 13.636363636364
+   - &width_per11_200 18.181818181818
+  width_per12_100:
+   - &width_per12_50 4.1666666666667
+   - &width_per12_100 8.3333333333333
+   - &width_per12_150 12.5
+   - &width_per12_200 16.666666666667
+   - &width_per12_250 20.833333333333
+   - &width_per12_300 25
+   - &width_per12_350 29.166666666667
+   - &width_per12_400 33.333333333333
+   - &width_per12_500 41.666666666667
+
+O_set: #　所有
+ key_hint_offset_x: 0
+ key_hint_offset_y: -0.2
+ key_press_offset_x: 0
+ key_press_offset_y: 0
+ key_symbol_offset_x: 0
+ key_symbol_offset_y: 0
+ key_text_offset_x: 0
+ key_text_offset_y: 0
+ preset:
+  upper_right:
+   key_symbol_offset_x: 13
+   key_symbol_offset_y: -1
+  upper_left:
+   key_symbol_offset_x: -13
+   key_symbol_offset_y: -1
+  lower_right:
+   key_symbol_offset_x: 13
+   key_symbol_offset_y: 21
+  lower_left:
+   key_symbol_offset_x: -13
+   key_symbol_offset_y: 21
+
+style:
+##基础设置
+ keyboards: ['.default', 'default', 'default_decimal', 'default_simp', 'number', 'number_pad']
+ auto_caps: false
+# preview_offset: 0
+ reset_ascii_mode: false
+ proximity_correction: true
+ candidate_use_cursor: true
+ speech_opencc_config: s2t.json
+ locale: zh_TW
+ latin_locale: en_US
+ vertical_correction: -10
+# background_dim_amount: 0.5
+# key_long_text_border: 1
+# background_folder:
+##基础外观设置
+ color_scheme: HoofCushion_win10_purple
+ horizontal: false
+ comment_on_top: true
+ candidate_padding: 9
+ candidate_spacing: 0.5
+ horizontal_gap: 1
+ vertical_gap: 1
+ round_corner: 0
+ shadow_radius: 0
+##尺寸-总体设置
+# keyboard_padding: 0
+# keyboard_padding_left: 0
+# keyboard_padding_right: 0
+# keyboard_padding_bottom: 0
+# keyboard_padding_land: 0
+# keyboard_padding_land_bottom: 0
+##尺寸-高度设置
+ candidate_view_height: 18
+ comment_height: 16
+# keyboard_height: 260
+ keyboard_height_land: 220
+ text_height: 22
+ key_height: *inputh
+##尺寸-宽度设置
+ key_width: *width_per10_100
+##字号设置
+ text_size: 12
+ candidate_text_size: 16
+ comment_text_size: 15
+ label_text_size: 12
+ key_text_size: 22
+ key_long_text_size: 16
+# preview_height: 60
+# preview_text_size: 40
+ symbol_text_size: 10
+##字形设置
+# candidate_font: han.ttf
+# comment_font: comment.ttf
+# hanb_font: hanb.ttf
+# key_font: symbol.ttf
+# label_font: label.ttf
+# latin_font: latin.ttf
+# preview_font: latin.ttf
+# symbol_font: symbol.ttf
+# text_font: latin.ttf
+# long_text_font: comment.ttf
+##悬浮窗设置
+ layout:
+  position: 'fixed'                                                                                  #位置：left|right|left_up|right_up|fixed|bottom_left|bottom_right|top_left|top_right(left、right需要>=Android5.0)
+  movable: false                                                                                   #是否可移动窗口，或仅移动一次 true|false|once
+####尺寸设置
+  min_width: 150                                                                                 #最小宽度
+  min_height: 75                                                                                 #最小高度
+  max_width: 512                                                                                     #最大宽度，超过则自动换行
+  max_height: 512                                                                                    #最大高度
+#  min_length: 0                                                                                    #最小词长
+#  max_length: 0                                                                                    #超过字数则换行
+  margin_x: 2                                                                                      #水平边距 NOTE: margin_{x, y, bottom} 实际为 padding
+  margin_y: 4                                                                                      #竖直边距
+#  margin_bottom: 0                                                                                 #底部边距 （用于适配特定背景图）
+#  line_spacing: 0                                                                                  #候选词的行间距(px)
+#  line_spacing_multiplier: 1                                                                    #候选词的行间距(倍数)
+####入词设置
+#  min_check: 0                                                                                     #只要前n个候选词有长度大于等于min_length的词，就会把长度符合以及之前的词全部加到悬浮窗内。
+  max_entries: 10                                                                                  #最大词条数
+  all_phrases: true                                                                                #所有满足条件的词语都显示在窗口
+  sticky_lines: 10                                                                                 #固顶行数
+  sticky_lines_land: 0                                                                            #横屏模式下的固顶行数
+####外观设置
+#  alpha: 255                                                                                      #透明度(0-255)
+  border: 1                                                                                        #边框宽度
+  spacing: -34                                                                                     #屏幕上下边缘或预编辑上下边缘和悬浮窗之间的距离
+#  elevation: 0                                                                                     #阴影(>=Android5.0)
+#  real_margin: 0                                                                                   #屏幕左右边缘和悬浮窗之间的距离 TODO: 在 4.0 时给 real_margin 与 spacing 换一个更适合的名字
+#  round_corner: 0                                                                                  #窗口圆角
+ window:                                                                                            #悬浮窗口组件
+  - {start: '', composition: '%s', end: '', send_spacing: 0}                                     #send_spacing需要>=Android5.0。TODO: 不为0时，会导致不换行的问题
+  - {start: "\n", label: '%s', candidate: '%s', comment: ' %s', end: '', sep: ' '}
+#liquid_keyboard_window:                                                                            #液态键盘模式下显示的悬浮窗口组件
+ enter_label_mode: 3                                                                                #是否使用App提供的ActionLabel内容作为Enter键的文本（由于多数App没有适配ActionLable，实际影响不大）。0不使用，1只使用actionlabel，2优先使用，3当其他方式没有获得label时才读取actionlabel
+ enter_labels:                                                                                      # 定义Enter键的文本
+  go: '前往'
+  done: '完成'
+  next: '下个'
+  pre: '上个'
+  search: '搜索'
+  send: '发送'
+  default: 'Enter'
+fallback_colors:
+ candidate_text_color: 'text_color'
+ comment_text_color: 'candidate_text_color'
+ border_color: 'back_color'
+ candidate_separator_color: 'border_color'
+ hilited_text_color: 'text_color'
+ hilited_back_color: 'back_color'
+ hilited_candidate_text_color: 'hilited_text_color'
+ hilited_candidate_back_color: 'hilited_back_color'
+ hilited_label_color: 'hilited_candidate_text_color'
+ hilited_comment_text_color: 'comment_text_color'
+ hilited_key_back_color: 'hilited_candidate_back_color'
+ hilited_key_text_color: 'hilited_candidate_text_color'
+ hilited_key_symbol_color: 'hilited_comment_text_color'
+ hilited_off_key_back_color: 'hilited_key_back_color'
+ hilited_on_key_back_color: 'hilited_key_back_color'
+ hilited_off_key_text_color: 'hilited_key_text_color'
+ hilited_on_key_text_color: 'hilited_key_text_color'
+ key_back_color: 'back_color'
+ key_border_color: 'border_color'
+ key_text_color: 'candidate_text_color'
+ key_symbol_color: 'comment_text_color'
+ label_color: 'candidate_text_color'
+ off_key_back_color: 'key_back_color'
+ off_key_text_color: 'key_text_color'
+ on_key_back_color: 'hilited_key_back_color'
+ on_key_text_color: 'hilited_key_text_color'
+ preview_back_color: 'key_back_color'
+ preview_text_color: 'key_text_color'
+ shadow_color: 'border_color'
+ root_background: 'back_color'
+ candidate_background: 'back_color'
+ keyboard_back_color: 'border_color'
+ liquid_keyboard_background: 'keyboard_back_color'
+ text_back_color: 'back_color'
+ long_text_back_color: 'key_back_color'
+preset_color_schemes:
+ default:
+  author: '蹄垫HoofCushion <2465403648>'
+  name: 'Win10鸢尾花／Win10 Purple'
+  color_format: 'argb'
+  back_color: 0x000000 # 背景
+  border_color: 0x503575 # 边框
+  comment_text_color: 0x734ca8 # 注释
+  label_color: 0xb2b2b2 # 标签
+  #shadow_color: # 阴影的颜色
+  text_color: 0xb2b2b2 # 文字
+  # 候选区域
+  #candidate_back_color:
+  #candidate_border_color:
+  #candidate_shadow_color:
+  candidate_text_color: 0xb2b2b2
+  # 高亮区域
+  hilited_back_color: 0x1f1f1f
+  hilited_comment_text_color: 0xa86ff5
+  hilited_label_color: 0x00000000
+  #hilited_mark_color:
+  #hilited_shadow_color:
+  hilited_text_color: 0xffffff
+  # 高亮的候选区域
+  hilited_candidate_back_color: 0x503575
+  #hilited_candidate_border_color:
+  #hilited_candidate_shadow_color:
+  #hilited_candidate_text_color:
+ trime:
+  name: '预设／default'                                                                                 #方案名称
+  author: 'osfans'                                                                                   #作者资讯
+  back_color: 0xe4e7e9                                                                             #候选区背景
+  border_color: 0xc1c7ca                                                                           #边框
+  candidate_separator_color: 0xc1c7ca                                                              #候选分割背景
+  candidate_text_color: 0x5a676e                                                                   #候选文字
+  comment_text_color: 0x7b868c                                                                     #提示
+  hilited_back_color: 0xccd3d7da                                                                   #标明编码背景
+  hilited_candidate_back_color: 0xd3d7da                                                           #标明候选背景
+  hilited_candidate_text_color: 0x000000                                                           #标明候选文字
+  hilited_comment_text_color: 0x000000                                                             #标明提示
+  hilited_key_back_color: 0xd3d7da                                                                 #标明按键背景
+  hilited_key_symbol_color: 0x000000                                                               #标明按键符号
+  hilited_key_text_color: 0x000000                                                                 #标明按键文字
+  hilited_off_key_back_color: 0xd3d7da                                                             #标明按键关闭状态背景
+  hilited_off_key_text_color: 0x000000                                                             #标明按键关闭状态文字
+  hilited_on_key_back_color: 0xd3d7da                                                              #标明按键打开状态背景
+  hilited_on_key_text_color: 0x000000                                                              #标明按键打开状态文字
+  hilited_text_color: 0x23948e                                                                     #标明编码
+  key_back_color: 0xeceff1                                                                         #按键背景
+#  key_border_color: 0xeceff1                                                                       #按键边框
+  key_symbol_color: 0x5f6b73                                                                       #按键符号
+  key_text_color: 0x37474f                                                                         #按键文字
+  keyboard_back_color: 0xffffff                                                                    #键盘背景
+  label_color: 0x000000                                                                            #标签
+  off_key_back_color: 0xd3d7da                                                                     #按键关闭状态背景
+  off_key_text_color: 0x000000                                                                     #按键关闭状态文字
+  on_key_back_color: 0x23948e                                                                      #按键打开状态背景
+  on_key_text_color: 0x37474f                                                                      #按键打开状态文字
+  preview_back_color: 0x55bfbfbf                                                                   #按键提示背景
+  preview_text_color: 0x23948e                                                                     #按键提示文字
+  shadow_color: 0x000000                                                                           #按键文字阴影
+  text_color: 0x5a676e                                                                             #编码
+  text_back_color: 0xcce4e7e9                                                                      #编码区背景
+#参考
+#android_keys:
+#  when:
+#    ascii: 西文标签
+#    paging: 翻页标签
+#    has_menu: 选单标签
+#    composing: 输入状态标签
+#    always: 始终
+#    hover: 滑过
+#    combo: 并击
+#    click: 单按
+#    long_click: 长按
+#    double_click: 双按
+#    swipe_left: 左滑
+#    swipe_right: 右滑
+#    swipe_up: 上滑
+#    swipe_down: 下滑
+#  property:
+#    width: 宽度
+#    height: 高度
+#    gap: 间隔
+#    preview: 预览
+#    hint: 提示
+#    label: 标签
+#    states: 状态标签
+#    repeatable: 连续按键
+#    functional: 功能键
+#    shift_lock: Shift锁定                                                                              #ascii_long: 英文长按中文单按锁定, long: 长按锁定, click: 单按锁定
+#  action:
+#    command: 命令
+#    option: 参数
+#    select: 选择
+#    toggle: 状态
+#    send: 按键
+#    text: 文字
+#    commit: 上屏
+preset_keys:
+# 安卓
+# BRIGHTNESS_DOWN: {label: '亮度-',  send: 'BRIGHTNESS_DOWN'}
+# BRIGHTNESS_UP:   {label: '亮度+',  send: 'BRIGHTNESS_UP'}
+# CALCULATOR:      {label: '计算机', send: 'CALCULATOR'}
+# CALENDAR:        {label: '日历',   send: 'CALENDAR'}
+# CONTACTS:        {label: '电话簿', send: 'CONTACTS'}
+# ENVELOPE:        {label: '信箱',   send: 'ENVELOPE'}
+# EXPLORER:        {label: '浏览器', send: 'EXPLORER'}
+# MUSIC:           {label: '音乐',   send: 'MUSIC'}
+# POWER:           {label: '电源',   send: 'POWER'}
+# SEARCH:          {label: '搜寻',   send: 'Find'}
+# SLEEP:           {label: '休眠',   send: 'SLEEP'}
+# VOICE_ASSIST:    {label: '语音',   send: 'VOICE_ASSIST'}
+# VOLUME_DOWN:     {label: '音量-',  send: 'VOLUME_DOWN'}
+# VOLUME_UP:       {label: '音量+',  send: 'VOLUME_UP'}
+# VOLUME_MUTE:     {label: '静音',   send: 'VOLUME_MUTE'}
+# 编辑
+ Shift_L: {label: 'Shift', send: 'Shift_L', shift_lock: 'click'}
+ Return: {label: 'enter_labels', send: 'Return'}
+ Return1: {label: 'Enter', send: 'Return'}
+ Hide: {label: '隐藏', send: 'BACK'}
+ BackSpace: {label: '退格', repeatable: true, send: 'BackSpace'}
+ space: {repeatable: false, functional: false, send: 'space'}
+ Escape: {label: 'Esc', send: 'Escape'}
+ Home: {label: '行首', send: 'Home'}
+ Insert: {label: '插入', send: 'Insert'}
+ Delete: {label: '删除', send: 'Delete'}
+ End: {label: '行尾', send: 'End'}
+ Page_Up: {label: '上页', send: 'Page_Up'}
+ Page_Down: {label: '下页', send: 'Page_Down'}
+ Left: {label: '←', send: 'Left'}
+ Down: {label: '↓', send: 'Down'}
+ Up: {label: '↑', send: 'Up'}
+ Right: {label: '→', send: 'Right'}
+# rime组合键
+ F4: {label: '方案选单', send: 'F4'}
+ BackToPreviousSyllable: {label: '删音节', send: 'Control+BackSpace'}
+ CommitRawInput: {label: '编码', send: 'Control+Return'}
+ CommitScriptText: {label: '编码', send: 'Shift+Return'}
+ CommitComment: {label: '编码', send: 'Control+Shift+Return'}
+ DeleteCandidate: {label: '删词', send: 'Control+Delete'}
+# rime状态
+ Mode_switch: {send: 'Mode_switch', toggle: 'ascii_mode', states: ['中文', '西文']}
+ Full_Shape_switch: {send: 'Mode_switch', toggle: 'full_shape', states: ['半角', '全角']}
+ Punct_switch: {send: 'Mode_switch', toggle: 'ascii_punct', states: ['。，', '．，']}
+# 切换键盘
+ Keyboard_default: {label: '返回', send: 'Eisu_toggle', select: '.default'}
+ Keyboard_switch: {label: '键盘', send: 'Eisu_toggle', select: '.next'}
+ liquid_keyboard_exit:       {label: '返回', send: 'function', command: 'liquid_keyboard', option: '-1'}          #退出liquidkeyboard
+ liquid_keyboard_candidate:  {label: '候选', send: 'function', command: 'liquid_keyboard', option: '候选'}
+ liquid_keyboard_history:    {label: '常用', send: 'function', command: 'liquid_keyboard', option: '常用'}
+ liquid_keyboard_clipboard:  {label: '剪贴', send: 'function', command: 'liquid_keyboard', option: '剪贴'}
+ liquid_keyboard_collection: {label: '收藏', send: 'function', command: 'liquid_keyboard', option: '收藏'}
+ liquid_keyboard_draft:      {label: '草稿', send: 'function', command: 'liquid_keyboard', option: '草稿'}
+# trime设定
+# IME_last: {label: '上一输入法', send: 'LANGUAGE_SWITCH', select: '.last'}                                   #直接切换到上一输入法
+# IME_next: {label: '下一输入法', send: 'LANGUAGE_SWITCH', select: '.next'}                                   #直接切换到下一输入法
+# Schema_switch: {label: '下一方案', send: 'Control+Shift+1'}
+# one_hand_switch_1: {send: 'Mode_switch', toggle: '_one_hand_mode_1', states: ['左手', '普通']}
+# one_hand_switch_2: {send: 'Mode_switch', toggle: '_one_hand_mode_2', states: ['右手', '普通']}
+# one_hand_switch_3: {send: 'Mode_switch', toggle: '_one_hand_mode_3', states: ['左手', '右手']}
+# Help: {label: '说明', send: 'Help'}
+# Info: {label: '关于', send: 'INFO'}
+ Menu: {label: '方案', send: 'Menu'}
+ IME_switch: {label: 🌐, send: 'LANGUAGE_SWITCH'}                                                    #弹出对话框选择输入法
+ Settings: {label: '设定', send: 'SETTINGS'}
+ Color_switch: {label: '配色', send: 'PROG_RED'}
+ Color_settings: {label: '配色', send: 'SETTINGS', option: 'color'}
+ Theme_settings: {label: '主题', send: 'SETTINGS', option: 'theme'}
+ Schema_settings: {label: '方案', send: 'SETTINGS', option: 'schema'}
+ Candidate_switch: {send: 'Mode_switch', toggle: '_hide_candidate', states: ['有候选', '无候选']}
+ Comment_switch: {send: 'Mode_switch', toggle: '_hide_comment', states: ['有注释', '无注释']}
+ Hint_switch: {send: 'Mode_switch', toggle: '_hide_key_hint', states: ['有助记', '无助记']}
+# trime命令
+# Date: {label: '日期', command: 'date', option: 'yyyy-MM-dd'}
+# ChineseDate: {label: '农历', command: 'date', option: 'zh_CN@calendar=chinese'}                          #农历等日期(>=Android 7.0)：date 语言@calendar=历法 格式。具体参见https://developer.android.com/reference/android/icu/util/Calendar.html
+# CommitHomepage: {label: '同文网址', commit: 'https://github.com/osfans/trime'}                             #直接上屏
+# Wiki: {label: '维基', command: 'run', option: 'https://zh.wikipedia.org/wiki/%s'}                        #搜索网页: %s或者%1$s为当前字符
+# WebSearch: {label: '搜索网页', command: 'web_search', option: '%4$s'}                                      #搜索，其他view、dial、edit、search等intent，参考安卓的intent文档：https://developer.android.com/reference/android/content/Intent.html
+# Search: {label: '搜索', command: 'search', option: '%1$s'}                                               #搜索短信、字典等
+# Share: {label: '分享', command: 'send', option: '%s'}                                                    #分享指定文本: %s或者%1$s为当前字符
+# Deploy: {label: '部署', command: 'broadcast', option: 'com.osfans.trime.deploy'}
+# Sync: {label: '同步', command: 'broadcast', option: 'com.osfans.trime.sync'}
+# RepeatCommit: {label: '重复',  command: 'commit', option: '%1$s'}                                      #重复输入刚上屏的内容
+
+liquid_keyboard:
+ # 目前只能直接写参数，不支持变量或者fallback机制。
+ # 缺少参数时，自动从style中加载参数。除非需要指定liquid_keyboard使用与主键盘不同的背景色、背景图，否则不应设置被注释掉的参数。
+ row: 6              #每屏最多显示多少行按键
+ row_land: 5         #横屏每屏最多显示多少行按键
+ key_height: 40      #按键高度
+ key_height_land: 40 #横屏模式按键高度
+ single_width: 60    #single类型的按键宽度
+ vertical_gap: 1     #纵向按键间隙
+ margin_x: 0         #左右按键间隙的1/2
+ keyboards: ['exit',' candidate',' history',' clipboard',' collection', 'draft']  #tab列表
+ exit:
+  name: '返回'
+  type: 'NO_KEY'
+  keys: 'EXIT'
+ candidate:
+  name: '候选'
+  type: 'CANDIDATE'
+ history:
+  name: '常用'
+  type: 'HISTORY'
+ clipboard:
+  type: 'CLIPBOARD'
+  name: '剪贴'
+ collection:
+  type: 'COLLECTION'
+  name: '收藏'
+ draft:
+  type: 'DRAFT'
+  name: '草稿'
+__patch:
+ preset_keys/+:
+  'Control_a'        : {functional: false, send: 'Control+a', label: '☑'}
+  'Control_z'        : {functional: false, send: 'Control+z', label: '↶'}
+  'Control_x'        : {functional: false, send: 'Control+x', label: '✂'}
+  'Control_c'        : {functional: false, send: 'Control+c', label: '❐'}
+  'Control_v'        : {functional: false, send: 'Control+v', label: '▣'}
+  'Control_y'        : {functional: false, send: 'Control+y', label: '↷'}
+  
+  'Control_wrap'     : {functional: false, send: 'Control+Control_R', label: 'Wrap'}
+  
+  
+  'delete_left'   : {functional: false, text: '{Shift+Home}{BackSpace}', label: '左清'}
+
+  'group_<>'      : {functional: false, text: '<>{Left}', label: '< ↔ >'}
+  'group_[]'      : {functional: false, text: '[]{Left}', label: '[ ↔ ]'}
+  'group_{}'      : {functional: false, text: '{}{Left}', label: '{ ↔ }'}
+  'group_()'      : {functional: false, text: '(){Left}', label: '( ↔ )'}
+  'group_;;'      : {functional: false,                   label: ': ↔ ;'}
+  "group_\"'"     : {functional: false,                   label: "\" ↔ '"}
+  'group_+-'      : {functional: false,                   label: '+ ↔ -'}
+  'group__='      : {functional: false,                   label: '_ ↔ ='}
+  'group_|||'     : {functional: false, text: '|',        label: '/←|→\'}
+  'group_home_end': {functional: false,                   label: '↞ - ↠'}
+  'send_q'      : {functional: false, send: 'q', label: 'Q'}
+  'send_w'      : {functional: false, send: 'w', label: 'W'}
+  'send_e'      : {functional: false, send: 'e', label: 'E'}
+  'send_r'      : {functional: false, send: 'r', label: 'R'}
+  'send_t'      : {functional: false, send: 't', label: 'T'}
+  'send_y'      : {functional: false, send: 'y', label: 'Y'}
+  'send_u'      : {functional: false, send: 'u', label: 'U'}
+  'send_i'      : {functional: false, send: 'i', label: 'I'}
+  'send_o'      : {functional: false, send: 'o', label: 'O'}
+  'send_p'      : {functional: false, send: 'p', label: 'P'}
+  'send_a'      : {functional: false, send: 'a', label: 'A'}
+  'send_s'      : {functional: false, send: 's', label: 'S'}
+  'send_d'      : {functional: false, send: 'd', label: 'D'}
+  'send_f'      : {functional: false, send: 'f', label: 'F'}
+  'send_g'      : {functional: false, send: 'g', label: 'G'}
+  'send_h'      : {functional: false, send: 'h', label: 'H'}
+  'send_j'      : {functional: false, send: 'j', label: 'J'}
+  'send_k'      : {functional: false, send: 'k', label: 'K'}
+  'send_l'      : {functional: false, send: 'l', label: 'L'}
+  'send_z'      : {functional: false, send: 'z', label: 'Z'}
+  'send_x'      : {functional: false, send: 'x', label: 'X'}
+  'send_c'      : {functional: false, send: 'c', label: 'C'}
+  'send_v'      : {functional: false, send: 'v', label: 'V'}
+  'send_b'      : {functional: false, send: 'b', label: 'B'}
+  'send_n'      : {functional: false, send: 'n', label: 'N'}
+  'send_m'      : {functional: false, send: 'm', label: 'M'}
+  
+  'delimiter': {text: "'", label: '分词'}
+
+  'space'         : {functional: false, label: '␣', send: 'space'}
+  'Tab'           : {functional: false, label: 'Tab', send: 'Tab'}
+  'Shift_L'       : {functional: false, label: '⇪Shift', send: 'Shift_L', shift_lock: 'ascii_long'}
+  'Return1'       : {functional: false, label: 'Enter', send: 'Return'}
+  'Return'        : {functional: false, label: 'enter_labels', send: 'Return'}
+  'Hide'          : {functional: false, label: 'Hide', send: 'BACK'}
+  'Escape'        : {functional: false, label: 'Esc', send: 'Escape'}
+  'Insert'        : {functional: false, label: 'Ins', send: 'Insert'}
+  'BackSpace'     : {functional: false, label: '⌫', send: 'BackSpace', repeatable: true}
+  'Delete'        : {functional: false, label: '⌦', send: 'Delete', repeatable: true}
+  'Home'          : {functional: false, label: '↞', send: 'Home'}
+  'End'           : {functional: false, label: '↠', send: 'End'}
+  'Page_Up'       : {functional: false, label: '⇈', send: 'Page_Up', repeatable: true}
+  'Page_Down'     : {functional: false, label: '⇊', send: 'Page_Down', repeatable: true}
+  'Up'            : {functional: false, label: '↑', send: 'Up', repeatable: true}
+  'Down'          : {functional: false, label: '↓', send: 'Down', repeatable: true}
+  'Left'          : {functional: false, label: '←', send: 'Left', repeatable: true}
+  'Right'         : {functional: false, label: '→', send: 'Right', repeatable: true}
+  
+  'Control_Left'  : {functional: false, send: 'Control+Left', label: '⇐'}
+  'Control_Right' : {functional: false, send: 'Control+Right', label: '⇒'}
+  
+  'Control_Home' : {functional: false, send: 'Control+Home', label: '⏮'}
+  'Control_End' : {functional: false, send: 'Control+End', label: '⏭'}
+  
+  'Control_BackSpace' : {functional: false, send: 'Control+BackSpace'}
+  'Control_Delete' : {functional: false, send: 'Control+Delete'}
+
+  'rep_1': {functional: false, text: '1', repeatable: true}
+  'rep_2': {functional: false, text: '2', repeatable: true}
+  'rep_3': {functional: false, text: '3', repeatable: true}
+  'rep_4': {functional: false, text: '4', repeatable: true}
+  'rep_5': {functional: false, text: '5', repeatable: true}
+  'rep_6': {functional: false, text: '6', repeatable: true}
+  'rep_7': {functional: false, text: '7', repeatable: true}
+  'rep_8': {functional: false, text: '8', repeatable: true}
+  'rep_9': {functional: false, text: '9', repeatable: true}
+  'rep_0': {functional: false, text: '0', repeatable: true}
+
+  'plain_1': {functional: false, text: '1', label: '1'}
+  'plain_2': {functional: false, text: '2', label: '2'}
+  'plain_3': {functional: false, text: '3', label: '3'}
+  'plain_4': {functional: false, text: '4', label: '4'}
+  'plain_5': {functional: false, text: '5', label: '5'}
+  'plain_6': {functional: false, text: '6', label: '6'}
+  'plain_7': {functional: false, text: '7', label: '7'}
+  'plain_8': {functional: false, text: '8', label: '8'}
+  'plain_9': {functional: false, text: '9', label: '9'}
+  'plain_0': {functional: false, text: '0', label: '0'}
+  'plain_,': {functional: false, text: ',', label: ','}
+  'plain_.': {functional: false, text: '.', label: '.'}
+  'plain_;': {functional: false, text: ';', label: ';'}
+  'plain_`': {functional: false, text: '`', label: '`'}
+  'plain_half"': {functional: false, text: "'", label: "'"}
+  'plain_slash': {functional: false, text: '/', label: '/'}
+  'plain_\': {functional: false, text: '\', label: '\'}
+  'plain_\t': {functional: false, text: "\t", label: '⇥'}
+  
+  'kb_number_pad': {functional: false, label: '123', send: 'Eisu_toggle', select: 'number_pad'}
+  'kb_default': {functional: false, label: '‹ɪ›', send: 'Eisu_toggle', select: 'default'}
+  'kb_default_simp': {functional: false, label: '␣', send: 'Eisu_toggle', select: 'default_simp'}
+  'kb_default_decimal': {functional: false, label: '⑩', send: 'Eisu_toggle', select: 'default_decimal'}
+
+
+cpk:
+ 'sym_a1': {swipe_left: '!', swipe_right: '!', swipe_up: '!', long_click: '!', swipe_down: '!'}
+ 'sym_a2': {swipe_left: '@', swipe_right: '@', swipe_up: '@', long_click: '@', swipe_down: '@'}
+ 'sym_a3': {swipe_left: '#', swipe_right: '#', swipe_up: '#', long_click: '#', swipe_down: '#'}
+ 'sym_a4': {swipe_left: '$', swipe_right: '$', swipe_up: '$', long_click: '$', swipe_down: '$'}
+ 'sym_a5': {swipe_left: '%', swipe_right: '%', swipe_up: '%', long_click: '%', swipe_down: '%'}
+ 'sym_a6': {swipe_left: '^', swipe_right: '^', swipe_up: '^', long_click: '^', swipe_down: '^'}
+ 'sym_a7': {swipe_left: '&', swipe_right: '&', swipe_up: '&', long_click: '&', swipe_down: '&'}
+ 'sym_a8': {swipe_left: '*', swipe_right: '*', swipe_up: '*', long_click: '*', swipe_down: '*'}
+ 'sym_a9': {swipe_left: 'plain_`', swipe_right: 'plain_`', swipe_up: 'plain_`', long_click: 'plain_`', swipe_down: 'plain_`'}
+ 'sym_a0': {swipe_left: '~', swipe_right: '~', swipe_up: '~', long_click: '~', swipe_down: '~'}
+ 'Page_Up': {click: 'Page_Up'}
+ 'Up': {click: 'Up'}
+ 'Page_Down': {click: 'Page_Down'}
+ 'BackSpace': {click: 'BackSpace', swipe_up: 'Control_BackSpace', swipe_left: 'Control_BackSpace', swipe_right: 'Control_BackSpace', swipe_down: 'Control_BackSpace'}
+ 'Left': {click: 'Left', swipe_up: 'Control_Left', swipe_left: 'Control_Left', swipe_right: 'Control_Left', swipe_down: 'Control_Left'}
+ 'Down': {click: 'Down'}
+ 'Right': {click: 'Right', swipe_up: 'Control_Right', swipe_left: 'Control_Right', swipe_right: 'Control_Right', swipe_down: 'Control_Right'}
+ 'Home': {click: 'Home', swipe_up: 'Control_Home', swipe_left: 'Control_Home', swipe_right: 'Control_Home', swipe_down: 'Control_Home'}
+ 'End': {click: 'End', swipe_up: 'Control_End', swipe_left: 'Control_End', swipe_right: 'Control_End', swipe_down: 'Control_End'}
+ 'Delete': {click: 'Delete', swipe_up: 'Control_Delete', swipe_left: 'Control_Delete', swipe_right: 'Control_Delete', swipe_down: 'Control_Delete'}
+ 'Escape': {click: 'Escape'}
+ 'Tab': {click: 'Tab', long_click: 'send_\t', swipe_up: 'send_\t'}
+ 'bottom_1' : {click: 'kb_number_pad', long_click: 'liquid_keyboard_clipboard'}
+ 'bottom_3' : {click: 'space', long_click: 'Mode_switch', swipe_up: 'Mode_switch', swipe_left: 'Left', swipe_right: 'Right'}
+ 'bottom_5' : {click: 'Return', long_click: 'Menu', swipe_up: 'Theme_settings', swipe_left: 'Color_settings'}
+ 'punct_,': {click: 'plain_,', label: ' ，', long_click: '!', swipe_up: '!', swipe_down: 'Punct_switch', swipe_right: 'Punct_switch', swipe_left: 'Punct_switch'}
+ 'punct_.': {click: 'plain_.', label: ' 。', long_click: '?', swipe_up: '?', swipe_down: 'Full_Shape_switch', swipe_right: 'Full_Shape_switch', swipe_left: 'Full_Shape_switch'}
+ 'backspace': {click: 'BackSpace', swipe_left: 'delete_left', label_symbol: '←左清'}
+ 'shift'    : {click: 'Shift_L', swipe_down: '`', swipe_up: 'Mode_switch', long_click: 'DeleteCandidate'}
+ 'sym_(': {long_click: '(', swipe_down: '('}
+ 'sym_)': {long_click: ')', swipe_down: ')'}
+ 'sym__': {long_click: '_', swipe_down: '_'}
+ 'sym_-': {long_click: '-', swipe_down: '-'}
+ 'sym_+': {long_click: '+', swipe_down: '+'}
+ 'sym_=': {long_click: '=', swipe_down: '='}
+ 'sym_[': {long_click: '[', swipe_down: '['}
+ 'sym_]': {long_click: ']', swipe_down: ']'}
+ 'sym_{': {long_click: '{', swipe_down: '{'}
+ 'sym_}': {long_click: '}', swipe_down: '}'}
+ 'sym_:': {long_click: ':', swipe_down: ':'}
+ 'sym_;': {long_click: ';', swipe_down: ';'}
+ 'sym_\': {long_click: '\', swipe_down: '\'}
+ "sym_'": {long_click: ''', swipe_down: '''}
+ 'sym_|': {long_click: '|', swipe_down: '|'}
+ 'sym_<': {long_click: '<', swipe_down: '<'}
+ 'sym_>': {long_click: '>', swipe_down: '>'}
+ 'sym_/': {long_click: '/', swipe_down: '/'}
+ 'sym_\t': {long_click: 'plain_\t', swipe_down: 'plain_\t'}
+ 'num_1': {click: 'plain_1'}
+ 'num_2': {click: 'plain_2'}
+ 'num_3': {click: 'plain_3'}
+ 'num_4': {click: 'plain_4'}
+ 'num_5': {click: 'plain_5'}
+ 'num_6': {click: 'plain_6'}
+ 'num_7': {click: 'plain_7'}
+ 'num_8': {click: 'plain_8'}
+ 'num_9': {click: 'plain_9'}
+ 'num_0': {click: 'plain_0'}
+ 'group_<>'      : {swipe_left: '<', swipe_right: '>'                 , long_click: 'group_<>'      , swipe_up: 'group_<>'      }
+ 'group_[]'      : {swipe_left: '[', swipe_right: ']'                 , long_click: 'group_[]'      , swipe_up: 'group_[]'      }
+ 'group_{}'      : {swipe_left: '{', swipe_right: '}'                 , long_click: 'group_{}'      , swipe_up: 'group_{}'      }
+ 'group_()'      : {swipe_left: '(', swipe_right: ')'                 , long_click: 'group_()'      , swipe_up: 'group_()'      }
+ 'group_;;'      : {swipe_left: ':', swipe_right: ';'                 , long_click: 'group_;;'      , swipe_up: 'group_;;'      }
+ "group_\"'"     : {swipe_left: '"', swipe_right: "'"                 , long_click: "group_\"'"     , swipe_up: "group_\"'"     }
+ 'group_+-'      : {swipe_left: '+', swipe_right: '-'                 , long_click: 'group_+-'      , swipe_up: 'group_+-'      }
+ 'group__='      : {swipe_left: '_', swipe_right: '='                 , long_click: 'group__='      , swipe_up: 'group__='      }
+ 'group_|||'     : {swipe_left: '/', swipe_down: '|', swipe_right: '\', long_click: 'group_|||'     , swipe_up: 'group_|||'     }
+ 'group_home_end': {swipe_left: 'Home', swipe_right: 'End'            , long_click: 'group_home_end', swipe_up: 'group_home_end'}
+ 'send_q': {click: 'send_q', swipe_up: 'Q'}
+ 'send_w': {click: 'send_w', swipe_up: 'W'}
+ 'send_e': {click: 'send_e', swipe_up: 'E'}
+ 'send_r': {click: 'send_r', swipe_up: 'R'}
+ 'send_t': {click: 'send_t', swipe_up: 'T'}
+ 'send_y': {click: 'send_y', swipe_up: 'Y'}
+ 'send_u': {click: 'send_u', swipe_up: 'U'}
+ 'send_i': {click: 'send_i', swipe_up: 'I'}
+ 'send_o': {click: 'send_o', swipe_up: 'O'}
+ 'send_p': {click: 'send_p', swipe_up: 'P'}
+ 'send_a': {click: 'send_a', swipe_up: 'A'}
+ 'send_s': {click: 'send_s', swipe_up: 'S'}
+ 'send_d': {click: 'send_d', swipe_up: 'D'}
+ 'send_f': {click: 'send_f', swipe_up: 'F'}
+ 'send_g': {click: 'send_g', swipe_up: 'G'}
+ 'send_h': {click: 'send_h', swipe_up: 'H'}
+ 'send_j': {click: 'send_j', swipe_up: 'J'}
+ 'send_k': {click: 'send_k', swipe_up: 'K'}
+ 'send_l': {click: 'send_l', swipe_up: 'L'}
+ 'send_z': {click: 'send_z', swipe_up: 'Z'}
+ 'send_x': {click: 'send_x', swipe_up: 'X'}
+ 'send_c': {click: 'send_c', swipe_up: 'C'}
+ 'send_v': {click: 'send_v', swipe_up: 'V'}
+ 'send_b': {click: 'send_b', swipe_up: 'B'}
+ 'send_n': {click: 'send_n', swipe_up: 'N'}
+ 'send_m': {click: 'send_m', swipe_up: 'M'}
+ 'plain_;': {click: 'plain_;', swipe_up: 'plain_;'}
+ 'plain_"': {click: 'plain_half"'}
+ 'plain_': {click: 'plain_slash'}
+ 'plain_\': {click: 'plain_\'}
+ 'plain_,': {click: 'plain_,'}
+ 'plain_.': {click: 'plain_.'}
+
+ 'swip_Control_a'  : {swipe_left: 'Control_a', swipe_right: 'Control_a', long_click: 'Control_a', swipe_down: 'Control_a'}
+ 'swip_Control_z'  : {swipe_left: 'Control_z', swipe_right: 'Control_z', long_click: 'Control_z', swipe_down: 'Control_z'}
+ 'swip_Control_x'  : {swipe_left: 'Control_x', swipe_right: 'Control_x', long_click: 'Control_x', swipe_down: 'Control_x'}
+ 'swip_Control_c'  : {swipe_left: 'Control_c', swipe_right: 'Control_c', long_click: 'Control_c', swipe_down: 'Control_c'}
+ 'swip_Control_v'  : {swipe_left: 'Control_v', swipe_right: 'Control_v', long_click: 'Control_v', swipe_down: 'Control_v'}
+ 'swip_Control_y'  : {swipe_left: 'Control_y', swipe_right: 'Control_y', long_click: 'Control_y', swipe_down: 'Control_y'}
+ 'swip_Control_wrap'  : {swipe_left: 'Control_wrap', swipe_right: 'Control_wrap', long_click: 'Control_wrap', swipe_down: 'Control_wrap'}
+ 'swip_Escape'  : {swipe_left: 'Escape', swipe_right: 'Escape', long_click: 'Escape', swipe_down: 'Escape'}
+ 'swip_Tab'     : {swipe_left: 'Tab', swipe_right: 'Tab', long_click: 'Tab', swipe_down: 'Tab'}
+ 'swip_Delimiter': {swipe_left: 'delimiter', swipe_right: 'delimiter', long_click: 'delimiter', swipe_down: 'delimiter'}
+ 'swip_Mode_switch'  : {swipe_left: 'Mode_switch', swipe_right: 'Mode_switch', long_click: 'Mode_switch', swipe_down: 'Mode_switch'}
+
+preset_keyboards:
+ default:
+  __include: 'O_set'
+  ascii_mode: 0
+  height: *inputh
+  width: 10
+  lock: true
+  keys:
+   - {} #第零个键
+   - {__include: 'cpk/num_1', __include: 'cpk/sym_a1', height: *firsth, __include: 'O_set/preset/upper_right'}
+   - {__include: 'cpk/num_2', __include: 'cpk/sym_a2', height: *firsth, __include: 'O_set/preset/upper_right'}
+   - {__include: 'cpk/num_3', __include: 'cpk/sym_a3', height: *firsth, __include: 'O_set/preset/upper_right'}
+   - {__include: 'cpk/num_4', __include: 'cpk/sym_a4', height: *firsth, __include: 'O_set/preset/upper_right'}
+   - {__include: 'cpk/num_5', __include: 'cpk/sym_a5', height: *firsth, __include: 'O_set/preset/upper_right'}
+   - {__include: 'cpk/Home', height: *firsth}
+   - {__include: 'cpk/Up', height: *firsth}
+   - {__include: 'cpk/End', height: *firsth}
+   - {__include: 'cpk/Page_Up', height: *firsth}
+   - {__include: 'cpk/BackSpace', height: *firsth}
+   - {__include: 'cpk/num_6', __include: 'cpk/sym_a6', height: *firsth, __include: 'O_set/preset/upper_right'}
+   - {__include: 'cpk/num_7', __include: 'cpk/sym_a7', height: *firsth, __include: 'O_set/preset/upper_right'}
+   - {__include: 'cpk/num_8', __include: 'cpk/sym_a8', height: *firsth, __include: 'O_set/preset/upper_right'}
+   - {__include: 'cpk/num_9', __include: 'cpk/sym_a9', height: *firsth, __include: 'O_set/preset/upper_right'}
+   - {__include: 'cpk/num_0', __include: 'cpk/sym_a0', height: *firsth, __include: 'O_set/preset/upper_right'}
+   - {__include: 'cpk/Left', height: *firsth}
+   - {__include: 'cpk/Down', height: *firsth}
+   - {__include: 'cpk/Right', height: *firsth}
+   - {__include: 'cpk/Page_Down', height: *firsth}
+   - {__include: 'cpk/Delete', height: *firsth}
+   - {__include: 'cpk/send_q', __include: 'cpk/swip_Escape', width: *width_per10_100}
+   - {__include: 'cpk/send_w', __include: 'cpk/swip_Control_wrap', width: *width_per10_100}
+   - {__include: 'cpk/send_e', long_click: 'kb_default', width: *width_per10_100}
+   - {__include: 'cpk/send_r', width: *width_per10_100}
+   - {__include: 'cpk/send_t', __include: 'cpk/sym_\t', width: *width_per10_100}
+   - {__include: 'cpk/send_y', width: *width_per10_100}
+   - {__include: 'cpk/send_u', __include: 'cpk/group_[]', width: *width_per10_100}
+   - {__include: 'cpk/send_i', __include: 'cpk/group_{}', width: *width_per10_100}
+   - {__include: 'cpk/send_o', __include: 'cpk/group_()', width: *width_per10_100}
+   - {__include: 'cpk/send_p', swipe_down: 'Hide', swipe_left: 'Hide', long_click: 'Hide', width: *width_per10_100}
+   - {__include: 'cpk/send_a', __include: 'cpk/swip_Tab', width: *width_per10_100}
+   - {__include: 'cpk/send_s', __include: 'cpk/group_home_end', width: *width_per10_100}
+   - {__include: 'cpk/send_d', long_click: 'kb_default_decimal', width: *width_per10_100}
+   - {__include: 'cpk/send_f', long_click: 'kb_default_simp', width: *width_per10_100}
+   - {__include: 'cpk/send_g', __include: 'cpk/swip_Control_z', width: *width_per10_100}
+   - {__include: 'cpk/send_h', __include: 'cpk/swip_Control_y', width: *width_per10_100}
+   - {__include: 'cpk/send_j', __include: 'cpk/group_;;', width: *width_per10_100}
+   - {__include: 'cpk/send_k', __include: "cpk/group_\"'", width: *width_per10_100}
+   - {__include: 'cpk/send_l', __include: 'cpk/group_|||', width: *width_per10_100}
+   - {__include: 'cpk/plain_;', __include: 'cpk/swip_Delimiter', width: *width_per10_100}
+   - {__include: 'cpk/shift', width: *width_per10_150}
+   - {__include: 'cpk/send_z', __include: 'cpk/swip_Control_a', width: *width_per10_100}
+   - {__include: 'cpk/send_x', __include: 'cpk/swip_Control_x', width: *width_per10_100}
+   - {__include: 'cpk/send_c', __include: 'cpk/swip_Control_c', width: *width_per10_100}
+   - {__include: 'cpk/send_v', __include: 'cpk/swip_Control_v', width: *width_per10_100}
+   - {__include: 'cpk/send_b', __include: 'cpk/group_<>', width: *width_per10_100}
+   - {__include: 'cpk/send_n', __include: 'cpk/group_+-', width: *width_per10_100}
+   - {__include: 'cpk/send_m', __include: 'cpk/group__=', width: *width_per10_100}
+   - {__include: 'cpk/backspace', width: *width_per10_150}
+   - {__include: 'cpk/bottom_1', width: *width_per10_200, height: *bottomh}
+   - {__include: 'cpk/punct_,', width: *width_per10_125, height: *bottomh}
+   - {__include: 'cpk/bottom_3', width: *width_per10_350, height: *bottomh}
+   - {__include: 'cpk/punct_.', width: *width_per10_125, height: *bottomh}
+   - {__include: 'cpk/bottom_5', width: *width_per10_200, height: *bottomh}
+ default_decimal:
+  __include: 'preset_keyboards/default'
+  __patch:
+   'keys/@6':
+   'keys/@7':
+   'keys/@8':
+   'keys/@9':
+   'keys/@10':
+   'keys/@16':
+   'keys/@17':
+   'keys/@18':
+   'keys/@19':
+   'keys/@20':
+ default_simp:
+  __include: 'preset_keyboards/default'
+  __patch:
+   'keys/@1':
+   'keys/@2':
+   'keys/@3':
+   'keys/@4':
+   'keys/@5':
+   'keys/@6':
+   'keys/@7':
+   'keys/@8':
+   'keys/@9':
+   'keys/@10':
+   'keys/@11':
+   'keys/@12':
+   'keys/@13':
+   'keys/@14':
+   'keys/@15':
+   'keys/@16':
+   'keys/@17':
+   'keys/@18':
+   'keys/@19':
+   'keys/@20':
+ number:
+  __include: 'preset_keyboards/default'
+ number_pad:
+  __include: 'O_set'
+  ascii_mode: 0
+  height: *inputh
+  width: 10
+  keys:
+   - {}
+   - {__include: 'preset_keyboards/default/keys/@1'}
+   - {__include: 'preset_keyboards/default/keys/@2'}
+   - {__include: 'preset_keyboards/default/keys/@3'}
+   - {__include: 'preset_keyboards/default/keys/@4'}
+   - {__include: 'preset_keyboards/default/keys/@5'}
+   - {__include: 'preset_keyboards/default/keys/@6'}
+   - {__include: 'preset_keyboards/default/keys/@7'}
+   - {__include: 'preset_keyboards/default/keys/@8'}
+   - {__include: 'preset_keyboards/default/keys/@9'}
+   - {__include: 'preset_keyboards/default/keys/@10'}
+   - {__include: 'preset_keyboards/default/keys/@11'}
+   - {__include: 'preset_keyboards/default/keys/@12'}
+   - {__include: 'preset_keyboards/default/keys/@13'}
+   - {__include: 'preset_keyboards/default/keys/@14'}
+   - {__include: 'preset_keyboards/default/keys/@15'}
+   - {__include: 'preset_keyboards/default/keys/@16'}
+   - {__include: 'preset_keyboards/default/keys/@17'}
+   - {__include: 'preset_keyboards/default/keys/@18'}
+   - {__include: 'preset_keyboards/default/keys/@19'}
+   - {__include: 'preset_keyboards/default/keys/@20'}
+   - {click: 1}
+   - {click: 1}
+   - {click: 1, width: 20}
+   - {click: 2, width: 20}
+   - {click: 3, width: 20}
+   - {click: 1}
+   - {click: 1}
+   - {click: 1}
+   - {click: 1}
+   - {click: 4, width: 20}
+   - {click: 5, width: 20}
+   - {click: 6, width: 20}
+   - {click: 1}
+   - {click: 1}
+   - {click: 1}
+   - {click: 1}
+   - {click: 7, width: 20}
+   - {click: 8, width: 20}
+   - {click: 9, width: 20}
+   - {click: 1}
+   - {click: 1}
+   - {__include: 'cpk/bottom_1', click: 'kb_default', width: *width_per10_200, height: *bottomh}
+   - {__include: 'cpk/punct_,', width: *width_per10_125, height: *bottomh}
+   - {__include: 'cpk/bottom_3', width: *width_per10_350, height: *bottomh}
+   - {__include: 'cpk/punct_.', width: *width_per10_125, height: *bottomh}
+   - {__include: 'cpk/bottom_5', width: *width_per10_200, height: *bottomh}

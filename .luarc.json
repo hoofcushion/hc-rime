@@ -12,37 +12,6 @@
    "lowercase-global",
    "different-requires"
   ],
-  "globals": [
-   "Candidate",
-   "Code",
-   "Component",
-   "ConfigList",
-   "ConfigMap",
-   "ConfigValue",
-   "DictEntry",
-   "KeyEvent",
-   "KeySequence",
-   "LevelDb",
-   "Memory",
-   "Menu",
-   "Opencc",
-   "Phrase",
-   "Projection",
-   "ReverseDb",
-   "ReverseLookup",
-   "Schema",
-   "Segment",
-   "Set",
-   "ShadowCandidate",
-   "Switcher",
-   "TableDb",
-   "Translation",
-   "UniquifiedCandidate",
-   "UserDb",
-   "log",
-   "rime_api",
-   "yield"
-  ]
  },
  "format": {
   "defaultConfig": {

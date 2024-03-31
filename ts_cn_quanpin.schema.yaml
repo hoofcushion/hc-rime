@@ -17,14 +17,21 @@ __patch:
   - ts_en # 英文
   - module_cn_en_quanpin # 混输
 __patch:
- - engine/processors/@after 4:      "lua_processor@quick_warp"
- - engine/translators/@after last:  "lua_translator@ts_cn_quanpin@translator"
- - engine/translators/@after last:  "lua_translator@ts_en@module_en"
- - engine/translators/@after last:  "lua_translator@module_cn_en"
+ # - engine/processors/@before 0:    "predictor"
+ # - engine/translators/@before 0:   "predict_translator"
+ - engine/translators/@after last: "lua_translator@*ts_cn_quanpin*translator@translator"
+ - engine/translators/@after last: "lua_translator@*ts_en*translator@module_en"
+ - engine/translators/@after last: "lua_translator@module_cn_en"
  - abc_segmentor/extra_tags/@after last: "ts_en"
  - ts_cn_quanpin.custom:/patch?
-module_lock: {initial_quality: 1, dictionary: module_lock_quanpin, enable_user_dict: false, enable_sentence: false, enable_completion: false, comment_format: [xform/.+//]}
-translator: {initial_quality: 1, dictionary: ts_cn, user_dict: ts_cn_quanpin}
-module_cn_en: {initial_quality: 1, dictionary: module_cn_en_quanpin, user_dict: module_cn_en_quanpin}
-module_en: {__include: ts_en.schema.yaml:/translator, tag: ts_en}
-quick_warp: 'Control+Control_R'
+translator:
+ initial_quality: 1
+ dictionary: ts_cn
+ user_dict: ts_cn_quanpin
+module_cn_en:
+ initial_quality: 1
+ dictionary: module_cn_en_quanpin
+ user_dict: module_cn_en_quanpin
+module_en:
+ __include: ts_en.schema.yaml:/translator
+ tag: ts_en

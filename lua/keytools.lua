@@ -14,19 +14,19 @@ local keyMap=
  ["9"]=8,
 }
 function M.move_true_index(key,env)
- local index <const> =keyMap[key]
- if not index then
+ local index=keyMap[key]
+ if index==nil then
   return false
  end
- local seg <const> = env.engine.context.composition:back()
+ local seg=env.engine.context.composition:back()
  if index>-1 then
-  local page_size <const> = env.engine.schema.page_size
+  local page_size=env.engine.schema.page_size
   seg.selected_index=index+math.floor(seg.selected_index/page_size)*page_size
  end
  return true
 end
 function M.key_map_initialize(env)
- local select_keys <const> = env.engine.schema.select_keys
+ local select_keys=env.engine.schema.select_keys
  if select_keys and select_keys~="" then
   keyMap={["space"]=-1}
   local count=0

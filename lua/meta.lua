@@ -1,5 +1,4 @@
 ---@meta librime-lua API
-Candidate={}
 Code={}
 Component={}
 ConfigList={}
@@ -19,12 +18,11 @@ ReverseLookup={}
 Schema={}
 Segment={}
 Set={}
-ShadowCandidate={}
 Switcher={}
 TableDb={}
 Translation={}
-UniquifiedCandidate={}
 UserDb={}
 log={}
 rime_api={}
-yield={}
+---@param Candidate Candidate
+function yield(Candidate) end

@@ -1,32 +1,73 @@
+logdir=rime_api:get_user_data_dir().."/log.txt"
+io.open(logdir,"w"):close()
+function write(s)
+ local file=io.open(logdir,"r")
+ if file then
+  file:close()
+  io.open(logdir,"a"):write(s):close()
+ end
+end
+function print(...)
+ local e=select("#",...)
+ for i=1,e do
+  write(tostring(select(i,...)))
+  if i<e then write("\t") end
+ end
+ write("\n")
+end
+local require=function (modname)
+ local _,ret=pcall(require,modname)
+ if _ then
+  return ret
+ else
+  print(modname.." not exists.")
+  return nil
+ end
+end
+---@alias engine_name
+---| "processor"
+---| "translator"
+---| "filter"
+---| "segmentor"
+---@alias lua_engine
+---| engine_processor_simp
+---| engine_processor_full
+---| engine_translator_simp
+---| engine_translator_full
+---| engine_filter_simp
+---| engine_filter_full
+---| engine_segmentor_simp
+---| engine_segmentor_full
+---@class engine
+---@field processor engine_processor_simp|engine_processor_full|nil
+---@field translator engine_translator_simp|engine_translator_full|nil
+---@field filter engine_filter_simp|engine_filter_full|nil
+---@field segmentor engine_segmentor_simp|engine_segmentor_full|nil
+---@alias engine_processor_simp fun(key,env):0|1|2
+---@class engine_processor_full
+---@field init fun(env)?
+---@field func fun(key,env):0|1|2
+---@field fini fun(env)?
+---@alias engine_translator_simp fun(input:string,seg,env)
+---@class engine_translator_full
+---@field init fun(env)?
+---@field func fun(input:string,seg,env)
+---@field fini fun(env)?
+---@alias engine_filter_simp fun(input,env)
+---@class engine_filter_full
+---@field init fun(env)?
+---@field func fun(input:Translation,env)
+---@field fini fun(env)?
+---@field tags_match fun(seg,env)?
+---@alias engine_segmentor_simp fun(seg,env)
+---@class engine_segmentor_full
+---@field init fun(env)?
+---@field func fun(seg,env)
+---@field fini fun(env)?
+---@type table<string,lua_engine>|engine
 -- package.path      = "./lua/?.lua;" .. package.path
-reverse_pro        =require("processor/reverse_pro")
-quick_warp         =require("processor/quick_warp")
-keymap             =require("processor/keymap")
-smart_punct        =require("processor/smart_punct")
-module_cn_en       =require("translator/module_cn_en")
-module_fnua_cn     =require("translator/module_fnua_cn")
-module_fnua_triple =require("translator/module_fnua_triple")
-save_entry         =require("translator/save_entry")
-chinese_number     =require("translator/chinese_number")
-unicode            =require("translator/unicode")
-execute            =require("translator/execute")
-custom_symbol      =require("translator/custom_symbol")
-custom_time        =require("translator/custom_time")
-ts_cn              =require("translator/ts_fixed").new({syllableLength=2})
-ts_cn_quanpin      =require("translator/ts_cn_quanpin")
-ts_triple          =require("translator/ts_fixed").new({syllableLength=3})
-ts_en              =require("translator/ts_en")
-fil_Uniquifier     =require("filter/Uniquifier")
-fil_KijinSeija     =require("filter/KijinSeija")
-fil_Unicode        =require("filter/Unicode")
-recorder           =require("other/recorder")
-local Utils <const> = require("utils")
-init               ={}
-function init.init(env)
- Utils.keyMapInitialize(env)
-end
-function init.func()
- return 2
-end
-ts_fanganlianxi_p,
-ts_fanganlianxi_t=table.unpack((require("mixed/ts_fanganlianxi")))
+module_cn_en      =require("translator/module_cn_en")
+module_fnua_cn    =require("translator/module_fnua_cn")
+module_fnua_triple=require("translator/module_fnua_triple")
+unicode           =require("translator/unicode")
+custom_time       =require("translator/custom_time")

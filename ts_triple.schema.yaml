@@ -21,21 +21,32 @@ __patch:
   - ts_en # 英文
   - module_fnua_triple # 反查
 __patch:
- - engine/processors/@after 7:      "lua_processor@reverse_pro"
- - engine/processors/@after 4:      "lua_processor@quick_warp"
+ # - engine/processors/@before 0:     "predictor"
+ # - engine/translators/@before 0:    "predict_translator"
  - engine/segmentors/@after 1:      "affix_segmentor@module_fnua_triple"
- - engine/translators/@before last: "lua_translator@module_fnua_triple"
- - engine/translators/@after last:  "lua_translator@ts_triple@translator"
- - engine/translators/@after last:  "lua_translator@ts_en@module_en"
+ - engine/processors/@after 1:      "lua_processor@*reverse_pro*processor@module_fnua_triple"
+ - engine/segmentors/@before 1:     "affix_segmentor@module_fnua_triple"
+ - engine/translators/@before last: "lua_translator@*ts_triple.reverse*translator@module_fnua_triple"
+ - engine/translators/@after last:  "lua_translator@*ts_fixed*translator@translator"
+ - engine/translators/@after last:  "lua_translator@*ts_en*translator@module_en"
  - abc_segmentor/extra_tags/@after last: "ts_en"
  - ts_triple.custom:/patch?
-module_lock: {initial_quality: 1, dictionary: module_lock_triple, enable_user_dict: false, enable_sentence: false, enable_completion: false, comment_format: [xform/.+//]}
-translator: {initial_quality: 1, dictionary: ts_triple, user_dict: ts_triple}
-module_en: {__include: ts_en.schema.yaml:/translator, tag: ts_en}
-module_fnua_triple: {prefix: "`", tag: module_fnua_triple, tips: 〔拼音反查〕, dictionary: module_fnua_triple, spelling_hints: 99, enable_user_dict: false}
+translator:
+ initial_quality: 1
+ dictionary: ts_triple
+ user_dict: ts_triple
+ syllable_len: 3
+module_en:
+ __include: ts_en.schema.yaml:/translator
+ tag: ts_en
+module_fnua_triple:
+ prefix: "`"
+ trigger: "space"
+ tag: module_fnua_triple
+ tips: 〔拼音反查〕
+ dictionary: module_fnua_triple
+ spelling_hints: 99
+ enable_user_dict: false
 recognizer:
- lua:
-  reverse_pro: '`'
  patterns:
   module_fnua_triple: "`.*$"
-quick_warp: 'Control+Control_R'

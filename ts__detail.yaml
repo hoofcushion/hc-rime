@@ -1,21 +1,20 @@
 schema:
- dependencies: # 加载本方案前自动加载的其他方案
-  - module_custom_phrase
-  - module_custom_symbol
+ dependencies:
+  - custom_phrase
+  - custom_symbol
 engine:
  processors:
   - ascii_composer
   - recognizer
   - key_binder
-  - lua_processor@keymap
+  - lua_processor@*keymap*processor
+  - lua_processor@*quick_warp*processor
   - speller
-  - lua_processor@smart_punct
   - punctuator
   - selector
   - navigator
   - express_editor
-  - lua_processor@recorder
-  - lua_processor@init
+  - lua_processor@*commit-recorder*processor@recorder
  segmentors:
   - ascii_segmentor
   - matcher
@@ -24,12 +23,12 @@ engine:
   - fallback_segmentor
  translators:
   - punct_translator
-  - lua_translator@execute # 计算器
-  - lua_translator@chinese_number
+  - lua_translator@*execute*translator@execute
+  - lua_translator@*chinese_number*translator@chinese_number
   - lua_translator@unicode
-  - lua_translator@save_entry
+  - lua_translator@*custom_word*translator@custom_word
   - lua_translator@custom_time
-  - lua_translator@custom_symbol # 自定义符号
+  - lua_translator@*custom_symbol*translator@custom_symbol
   - table_translator@custom_phrase # 自定义短语
  filters:
   - simplifier@fil_s2t
@@ -39,9 +38,31 @@ engine:
   - simplifier@fil_zhuyin
   - simplifier@fil_huoxin
   - simplifier@fil_trans
-  - lua_filter@fil_Uniquifier
-  - lua_filter@fil_KijinSeija
-  - lua_filter@fil_Unicode
+  - lua_filter@*cand-continuous-len*filter@3
+  - lua_filter@*cand-limit*filter@100 # show only 100 cands
+  - lua_filter@*uniquifier*filter
+  - lua_filter@*cand-details*filter
+  - lua_filter@*cand-reverse*filter@fil_KijinSeija
+  - lua_filter@*cand-unicode*filter@fil_Unicode
+execute:
+ initial_quality: 64
+ prefix: "//" #汉字数字+金额 整数支持最高52位
+ tag: "execute"
+chinese_number:
+ initial_quality: 64
+ prefix: "/J" #汉字数字+金额 整数支持最高52位
+ tag: "chinese_number"
+custom_symbol:
+ initial_quality: 64
+ prefix: '\'
+ tag: "custom_symbol"
+ # comment: ""
+ # tips: ""
+custom_word:
+ initial_quality: 64
+ user_dict: custom_word
+ suffix: "-="
+ delimiter: "|"
 custom_phrase:
  initial_quality: 64
  dictionary: custom_phrase
@@ -53,131 +74,61 @@ custom_symbol:
  dictionary: custom_symbol
  enable_user_dict: true
  tag: custom_symbol
+fil_for_all: &fil_for_all
+ tips: all
+ tags: [abc]
 fil_s2t:
+ <<: *fil_for_all
  option_name: fil_s2t
  opencc_config: s2t.json
- tips: all
- tags: [abc]
 fil_emoji:
- option_name: fil_emoji
  opencc_config: emoji.json
- tips: all
- tags: [abc]
+ <<: *fil_for_all
+ option_name: fil_emoji
 fil_users:
+ <<: *fil_for_all
  option_name: fil_emoji
  opencc_config: users.json
- tips: all
- tags: [abc]
 fil_symbol:
+ <<: *fil_for_all
  option_name: fil_symbol
  opencc_config: sym.json
- tips: all
- tags: [abc]
 fil_zhuyin:
+ <<: *fil_for_all
  option_name: fil_zhuyin
  opencc_config: pinyin.json
- tips: char
- tags: [abc]
  show_in_comment: true
  comment_format: [xform/&nbsp/｜/]
+fil_huoxin:
+ <<: *fil_for_all
+ option_name: fil_huoxin
+ opencc_config: huoxing.json
 fil_trans:
  option_name: fil_trans
  opencc_config: dic_4w_en.json
  tips: all
  tags: [ts_en]
-fil_huoxin:
- option_name: fil_huoxin
- opencc_config: huoxing.json
- tips: all
- tags: [abc]
-fil_KijinSeija: {option_name: fil_KijinSeija}
-fil_Unicode: {option_name: fil_Unicode}
-#stcs: {option_name: fil_s2t, opencc_config: s2t.json}
+fil_KijinSeija:
+ option_name: fil_KijinSeija
+fil_Unicode:
+ option_name: fil_Unicode
+predictor:
+ db: predict.db
+ max_candidates: 10
+ max_iterations: 1
 speller:
  delimiter: " '"
 punctuator:
- full_shape:
-  " ": {"commit": "　"}
-  ",": {"commit": "，"}
-  ".": {"commit": "。"}
-  "<": ["《", "〈", "«", "‹"]
-  ">": ["》", "〉", "»", "›"]
-  "/": ["／", "÷"]
-  "?": {"commit": "？"}
-  ";": {"commit": "；"}
-  ":": {"commit": "："}
-  "'": {"pair": ["‘", "’"]}
-  '"': {"pair": ["“", "”"]}
-  '\': ["、", "＼"]
-  "|": ["·", "｜", "§", "¦"]
-  "`": "｀"
-  "~": "～"
-  "!": {"commit": "！"}
-  "@": ["＠", "☯"]
-  "# ": ["＃", "⌘"]
-  "%": ["％", "°", "℃"]
-  "$": ["￥", "$", "€", "£", "¥", "¢", "¤"]
-  "^": {"commit": "……"}
-  "&": "＆"
-  "*": ["＊", "·", "・", "×", "※", "❂"]
-  "(": "（"
-  ")": "）"
-  "-": "－"
-  "_": "——"
-  "+": "＋"
-  "=": "＝"
-  "[": ["「", "【", "〔", "［"]
-  "]": ["」", "】", "〕", "］"]
-  "{": ["『", "〖", "｛"]
-  "}": ["』", "〗", "｝"]
- half_shape:
-  ",": "，"
-  ".": "。"
-  "<": "《"
-  ">": "》"
-  "/": "/"
-  "?": "？"
-  ";": "；"
-  ":": "："
-  "'": {"pair": ["‘", "’"]}
-  '"': {"pair": ["“", "”"]}
-  '\': "、"
-  "|": "|"
-  "`": "`"
-  "~": "~"
-  "!": "！"
-  "@": "@"
-  "# ": "# "
-  "%": "%"
-  "$": "¥"
-  "^": "……"
-  "&": "&"
-  "*": "*"
-  "(": "（"
-  ")": "）"
-  "-": "-"
-  "_": "——"
-  "+": "+"
-  "=": "="
-  "[": "【"
-  "]": "】"
-  "{": "「"
-  "}": "」"
+ import_preset: default
 recognizer:
+ import_preset: default
  lua:
-  execute: "//" #计算器
-  quick_start: "/" #快速启动
   unicode: "U" #Unicode
-  chinese_number: "/J" #汉字数字+金额 整数支持最高52位
-  custom_symbol: '\' #符号
-  option_swither: "/O" #切换选项
  patterns: #pattern 中单个 \ 要用 \\\\ 双重转义来表示
   execute: "^//.*" #计算器
-  quick_start: "^/(?!/).*" #快速启动
   unicode: "^U(?:[HDOB]?[a-f0-9]*|[a-f0-9]*[HDOB]?)$" #Unicode
   chinese_number: "^/J.*" #汉字数字+金额 整数支持最高52位
   custom_symbol: '^\\(?:10?|[0-9]|[A-Za-z]+)?' #符号
-  option_swither: "/O.*" #切换选项
 ascii_composer:
  good_old_caps_lock: true
  switch_key:
@@ -198,18 +149,16 @@ key_binder:
   - {accept: "Control+f", send: Right, when: composing}
   - {accept: "Control+o", send: Control+Left, when: composing}
   - {accept: "Control+i", send: Control+Right, when: composing}
-  - {accept: "ISO_Left_Tab", send: Control+Left, when: composing}
+  # - {accept: "ISO_Left_Tab", send: Control+Left, when: composing}
   - {accept: "Shift+Tab", send: Control+Left, when: composing}
-  - {accept: "Tab", send: Control+Right, when: composing}
+  # - {accept: "Tab", send: Control+Right, when: composing}
   - {accept: "Control+h", send: BackSpace, when: composing}
   - {accept: "Control+l", send: Delete, when: composing}
   - {accept: "Control+w", send: Control+BackSpace, when: composing}
   - {accept: "Control+d", send: Control+Delete, when: composing}
   - {accept: "Control+y", send: space, when: has_menu}
-  - {accept: "Control+e", send: Escape, when: composing}
-  - {accept: "Control+u", send: Escape, when: composing}
+  - {accept: "Control+bracketleft", send: Escape, when: composing}
   - {accept: "Control+c", send: Escape, when: composing}
-  - {accept: "Control+[", send: Escape, when: composing}
   - {accept: "KP_1", send: 1, when: composing}
   - {accept: "KP_2", send: 2, when: composing}
   - {accept: "KP_3", send: 3, when: composing}
