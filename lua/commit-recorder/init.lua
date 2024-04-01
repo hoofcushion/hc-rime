@@ -64,7 +64,7 @@ local function save(str,path)
  end
  file:close()
 end
-local PATHS <const> = {
+local PATHS={
  char=Utils.rime_file_exist("recorder/char.txt"),
  word=Utils.rime_file_exist("recorder/word.txt"),
  other=Utils.rime_file_exist("recorder/other.txt"),

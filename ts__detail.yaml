@@ -38,7 +38,7 @@ engine:
   - simplifier@fil_zhuyin
   - simplifier@fil_huoxin
   - simplifier@fil_trans
-  - lua_filter@*cand-continuous-len*filter@3
+  - lua_filter@*cand-continuous-len*filter@6
   - lua_filter@*cand-limit*filter@100 # show only 100 cands
   - lua_filter@*uniquifier*filter
   - lua_filter@*cand-details*filter

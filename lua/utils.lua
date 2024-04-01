@@ -79,16 +79,16 @@ local function deepcopy(input)
  if deepcopy_invalid_type[t]==true then
   error("Cannot deepcopy type "..t)
  end
- if t=="table" then
-  local copy={}
-  for k,v in pairs(input) do
-   k=deepcopy(k)
-   v=deepcopy(v)
-   copy[k]=v
-  end
-  return copy
+ if t~="table" then
+  return input
  end
- return input
+ local copy={}
+ for k,v in pairs(input) do
+  k=deepcopy(k)
+  v=deepcopy(v)
+  copy[k]=v
+ end
+ return copy
 end
 M.deepcopy=deepcopy
 local function deepnext(tbl,key)
