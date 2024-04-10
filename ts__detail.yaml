@@ -9,6 +9,7 @@ engine:
   - key_binder
   - lua_processor@*keymap*processor
   - lua_processor@*quick_warp*processor
+  - lua_processor@*shape-filter*processor
   - speller
   - punctuator
   - selector
@@ -44,6 +45,7 @@ engine:
   - lua_filter@*cand-details*filter
   - lua_filter@*cand-reverse*filter@fil_KijinSeija
   - lua_filter@*cand-unicode*filter@fil_Unicode
+  - lua_filter@*shape-filter*filter
 execute:
  initial_quality: 64
  prefix: "//" #汉字数字+金额 整数支持最高52位

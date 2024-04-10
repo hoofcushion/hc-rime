@@ -43,7 +43,7 @@ local function popen(path,mode)
  return file
 end
 local function escape(str)
- return string.gsub(str,"([%^%%%%[%]%-$().*+?])","%%%1")
+ return string.gsub(str,"([%^%%%[%]%-$().*+?])","%%%1")
 end
 local function save(str,path)
  local lines={[1]=str.."\t1"}

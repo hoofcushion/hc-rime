@@ -20,7 +20,7 @@ local function is_line_exist(dir,str)
  return false
 end
 local function escape(str)
- return string.gsub(str,"([%^%%%%[%]%-$().*+?])","%%%1")
+ return string.gsub(str,"([%^%%%[%]%-$().*+?])","%%%1")
 end
 local function save_dict(dir,unconfirm)
  local existed=is_line_exist(dir,unconfirm)
@@ -38,7 +38,7 @@ end
 local M={}
 M.translator={}
 function M.translator.init(env)
- local Utils=require"utils"
+ local Utils=require("utils")
  local config=env.engine.schema.config
  local ns=env.name_space
  env.suffix=config:get_string(ns.."/suffix") or "-="

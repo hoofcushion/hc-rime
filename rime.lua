@@ -53,12 +53,12 @@ end
 ---@field init fun(env)?
 ---@field func fun(input:string,seg,env)
 ---@field fini fun(env)?
----@alias engine_filter_simp fun(input,env)
+---@alias engine_filter_simp fun(input:Translation,env)
 ---@class engine_filter_full
 ---@field init fun(env)?
 ---@field func fun(input:Translation,env)
 ---@field fini fun(env)?
----@field tags_match fun(seg,env)?
+---@field tags_match (fun(seg,env):boolean)?
 ---@alias engine_segmentor_simp fun(seg,env)
 ---@class engine_segmentor_full
 ---@field init fun(env)?
