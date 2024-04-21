@@ -1,6 +1,7 @@
 recorder/*.txt
 recorder/output
 *.userdb
+custom_word.txt
 build
 user.yaml
 installation.yaml
