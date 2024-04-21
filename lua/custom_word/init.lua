@@ -43,9 +43,9 @@ function M.translator.init(env)
  local ns=env.name_space
  env.suffix=config:get_string(ns.."/suffix") or "-="
  env.delimiter=config:get_string(ns.."/delimiter") or "|"
- env.pattern=escape(env.suffix).."$"
  env.quality=config:get_double(ns.."/initial_quality") or 0
  env.user_dict=Utils.rime_file_exist((config:get_string(ns.."/user_dict") or "custom_word")..".txt")
+ env.pattern=escape(env.suffix).."$"
  function env.yield(text,comment,seg)
   local cand=Candidate("custom_word",seg.start,seg._end,text,comment)
   cand.quality=env.quality

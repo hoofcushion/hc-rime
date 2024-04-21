@@ -26,9 +26,9 @@ engine:
   - punct_translator
   - lua_translator@*execute*translator@execute
   - lua_translator@*chinese_number*translator@chinese_number
-  - lua_translator@unicode
+  - lua_translator@*unicode*translator@unicode
   - lua_translator@*custom_word*translator@custom_word
-  - lua_translator@custom_time
+  - lua_translator@*custom_time*translator@custom_time
   - lua_translator@*custom_symbol*translator@custom_symbol
   - table_translator@custom_phrase # 自定义短语
  filters:
@@ -48,12 +48,16 @@ engine:
   - lua_filter@*shape-filter*filter
 execute:
  initial_quality: 64
- prefix: "//" #汉字数字+金额 整数支持最高52位
+ prefix: "//" #Lua 代码执行
  tag: "execute"
 chinese_number:
  initial_quality: 64
  prefix: "/J" #汉字数字+金额 整数支持最高52位
  tag: "chinese_number"
+unicode:
+ initial_quality: 64
+ prefix: "U" #Unicode 输入
+ tag: "unicode"
 custom_symbol:
  initial_quality: 64
  prefix: '\'
@@ -61,7 +65,7 @@ custom_symbol:
  # comment: ""
  # tips: ""
 custom_word:
- initial_quality: 64
+ initial_quality: 1000000
  user_dict: custom_word
  suffix: "-="
  delimiter: "|"
@@ -124,8 +128,6 @@ punctuator:
  import_preset: default
 recognizer:
  import_preset: default
- lua:
-  unicode: "U" #Unicode
  patterns: #pattern 中单个 \ 要用 \\\\ 双重转义来表示
   execute: "^//.*" #计算器
   unicode: "^U(?:[HDOB]?[a-f0-9]*|[a-f0-9]*[HDOB]?)$" #Unicode

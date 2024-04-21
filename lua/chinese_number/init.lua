@@ -190,39 +190,40 @@ local function prompt_connect(env,str)
  local seg=comp:back()
  seg.prompt=seg.prompt..str
 end
-local M={
- translator={
-  init=function(env)
-   local config=env.engine.schema.config
-   local ns=env.name_space~="" and env.name_space or "chinese_number"
-   env.tag=config:get_string(ns.."/tag") or ns
-   env.prefix=config:get_string(ns.."/prefix") or ns
-   env.code_start=#env.prefix+1
-   function env.yield(text,comment,seg)
-    yield(Candidate(env.name_space,seg.start,seg._end,text,comment))
-   end
-  end,
-  func=function(input,seg,env)
-   if seg:has_tag(env.tag)==false then
-    return
-   end
-   local code=input:sub(env.code_start):gsub("^0+","")
-   if code=="" then
-    env.yield("请输入数字","",seg)
-    return
-   elseif code:find("^%d+$")==nil and code:find("^%d-%.%d*$")==nil then
-    env.yield("数字不合法","",seg)
-    return
-   elseif #code:match("^%d+")>MAX_INTMAG then
-    env.yield("位数超过限制","",seg)
-    return
-   end
-   prompt_connect(env,"〔大写数字〕")
-   for i,mode in ipairs(modes) do
-    local text=characterizer(code,mode)
-    env.yield(text,comments[i],seg)
-   end
-  end,
- },
-}
+local M={}
+M.translator={}
+function M.translator.init(env)
+ local config=env.engine.schema.config
+ local ns=env.name_space~="" and env.name_space or "chinese_number"
+ env.tag=config:get_string(ns.."/tag") or ns
+ env.prefix=config:get_string(ns.."/prefix") or ""
+ env.quality=config:get_double(ns.."/initial_quality") or 0
+ env.code_start=#env.prefix+1
+ function env.yield(text,comment,seg)
+  local cand=Candidate(env.name_space,seg.start,seg._end,text,comment)
+  cand.quality=env.quality
+  yield(cand)
+ end
+end
+function M.translator.func(input,seg,env)
+ if seg:has_tag(env.tag)==false then
+  return
+ end
+ local code=input:sub(env.code_start):gsub("^0+","")
+ if code=="" then
+  env.yield("请输入数字","",seg)
+  return
+ elseif code:find("^%d+$")==nil and code:find("^%d-%.%d*$")==nil then
+  env.yield("数字不合法","",seg)
+  return
+ elseif #code:match("^%d+")>MAX_INTMAG then
+  env.yield("位数超过限制","",seg)
+  return
+ end
+ prompt_connect(env,"〔大写数字〕")
+ for i,mode in ipairs(modes) do
+  local text=characterizer(code,mode)
+  env.yield(text,comments[i],seg)
+ end
+end
 return M

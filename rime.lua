@@ -69,5 +69,3 @@ end
 module_cn_en      =require("translator/module_cn_en")
 module_fnua_cn    =require("translator/module_fnua_cn")
 module_fnua_triple=require("translator/module_fnua_triple")
-unicode           =require("translator/unicode")
-custom_time       =require("translator/custom_time")

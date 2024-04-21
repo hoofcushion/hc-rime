@@ -3,23 +3,28 @@ local function method_warp(obj,func)
   func(obj,...)
  end
 end
-local method_enum={init=true,func=true,fini=true,tags_match=true}
-local engine_enum={processor=true,segmentor=true,translator=true,filter=true}
+local is_method={init=true,func=true,fini=true,tags_match=true}
+local is_engine={processor=true,segmentor=true,translator=true,filter=true}
 local M={}
+---@param engine lua_engine
 function M.new_engine(engine)
- local new={}
- for k,v in pairs(engine) do
-  if method_enum[k] and type(v)=="function" then
-   v=method_warp(new,v)
+ if type(engine)=="table" then
+  local new={}
+  for k,v in pairs(engine) do
+   if is_method[k]==true and type(v)=="function" then
+    v=method_warp(new,v)
+   end
+   new[k]=v
   end
-  new[k]=v
+  return new
+ else
+  return method_warp({},engine)
  end
- return new
 end
 function M.new_engines(obj)
  local new={}
  for k,v in pairs(obj) do
-  if engine_enum[k] then
+  if is_engine[k]==true then
    new[k]=M.new_engine(v)
   end
  end

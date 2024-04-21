@@ -1,8 +1,6 @@
 local M={}
 local F={}
 M.filter=F
----@class Translation
----@field iter fun(self):(fun(Translation):Candidate)
 ---@param input Translation
 function F.func(input)
  ---@type table<string,Candidate>
