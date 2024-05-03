@@ -1,31 +1,35 @@
-local Time_Table={}
-local Reverse={}
-local inputTable=require("custom_time.dict")
-for index,entry in ipairs(inputTable) do
- table.insert(Time_Table,entry)
+local reverse={}
+local dict=require("custom_time.dict")
+for _,entry in ipairs(dict) do
  for _,code in ipairs(entry.codes) do
-  if Reverse[code]==nil then
-   Reverse[code]={}
+  if reverse[code]==nil then
+   reverse[code]={}
   end
-  table.insert(Reverse[code],index)
+  table.insert(reverse[code],entry)
  end
 end
 local M={}
 M.translator={}
 function M.translator.init(env)
+ local config=env.engine.schema.config
+ local ns=env.name_space~="" and env.name_space or "custom_time"
+ env.quality=config:get_double(ns.."/initial_quality") or 0
+ function env.yield(text,comment,seg)
+  local cand=Candidate(ns,seg.start,seg._end,text,comment)
+  cand.quality=env.quality
+  yield(cand)
+ end
 end
 function M.translator.func(input,seg,env)
- if Reverse[input]==nil then
+ local entries=reverse[input]
+ if entries==nil then
   return
  end
- for _,index in ipairs(Reverse[input]) do
-  local entry=Time_Table[index]
+ for _,entry in ipairs(entries) do
   for _,item in ipairs(entry) do
    local text   =item.text()
    local comment=item.comment or entry.comment
-   local cand   =Candidate("time",seg.start,seg._end,text,comment)
-   cand.quality =8102
-   yield(cand)
+   env.yield(text,comment,seg)
   end
  end
 end

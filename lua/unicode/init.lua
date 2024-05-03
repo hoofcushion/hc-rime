@@ -26,6 +26,7 @@ function M.translator.init(env)
  local ns=env.name_space~="" and env.name_space or "unicode"
  env.tag=config:get_string(ns.."/tag") or ns
  env.prefix=config:get_string(ns.."/prefix") or ""
+ env.quality=config:get_double(ns.."/initial_quality") or 0
  env.default=config:get_string(ns.."/default") or "H"
  env.code_start=#env.prefix+1
 end
@@ -64,6 +65,7 @@ function M.translator.func(_,seg,env)
   end
   local cand=Candidate("unicode",seg.start,seg._end,utf8.char(iConde),tostring(iConde))
   cand.preedit=code
+  cand.quality=env.quality
   yield(cand)
  end
 end

@@ -3,7 +3,7 @@ local function mem_filter(env,cond)
  mem:memorize(function(commit)
   for _,dict in ipairs(commit:get()) do
    if cond(dict)==true then
-    mem:update_userdict(dict,-2,"")
+    mem:update_userdict(dict,-1,"")
    end
   end
  end)

@@ -1,10 +1,10 @@
 recorder/*.txt
 recorder/output
 *.userdb
-custom_word.txt
 build
 user.yaml
 installation.yaml
 rime-ice/*
 sync
 log.txt
+*.schema.yaml

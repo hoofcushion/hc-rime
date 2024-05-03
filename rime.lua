@@ -1,3 +1,4 @@
+local utils=require("utils")
 logdir=rime_api:get_user_data_dir().."/log.txt"
 io.open(logdir,"w"):close()
 function write(s)
@@ -10,19 +11,10 @@ end
 function print(...)
  local e=select("#",...)
  for i=1,e do
-  write(tostring(select(i,...)))
+  write(utils.serialize(select(i,...)))
   if i<e then write("\t") end
  end
  write("\n")
-end
-local require=function (modname)
- local _,ret=pcall(require,modname)
- if _ then
-  return ret
- else
-  print(modname.." not exists.")
-  return nil
- end
 end
 ---@alias engine_name
 ---| "processor"
@@ -66,6 +58,7 @@ end
 ---@field fini fun(env)?
 ---@type table<string,lua_engine>|engine
 -- package.path      = "./lua/?.lua;" .. package.path
-module_cn_en      =require("translator/module_cn_en")
 module_fnua_cn    =require("translator/module_fnua_cn")
 module_fnua_triple=require("translator/module_fnua_triple")
+local luaschema   =require("luaschema")
+require("hoofcushion").setup()

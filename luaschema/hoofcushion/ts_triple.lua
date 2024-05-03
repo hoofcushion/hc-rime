@@ -1,0 +1,67 @@
+local utils=require("utils")
+local schema=utils.tbl_extend(
+ require("hoofcushion.ts_detail"),
+ require("hoofcushion.speller.triple"),
+ require("hoofcushion.schema_settings.ts_triple"),
+ function(schema)
+  table.insert(schema.engine.segmentors,3,"affix_segmentor@module_fnua_triple")
+  table.insert(schema.engine.processors,2,"lua_processor@*reverse_pro*processor@module_fnua_triple")
+ end,
+ {
+  schema={
+   schema_id="ts_triple",
+   name="三码拼音",
+   description=[[
+汉语输入方案之三码拼音
+原作者为阿森纳里
+由 Hoofcushion 改进适配 Qwerty 布局
+]],
+   dependencies={
+    "ts_en",
+    "module_cn_en",
+    "module_fnua_triple",
+   },
+  },
+  engine={
+   translators={
+    "lua_translator@*ts_triple.reverse*translator@module_fnua_triple",
+    "lua_translator@*ts_fixed*translator@translator",
+    "lua_translator@*ts_en*translator@module_en",
+   },
+  },
+  abc_segmentor={
+   extra_tags={"ts_en"},
+  },
+  translator={
+   initial_quality=1,
+   dictionary="ts_triple",
+   user_dict="ts_triple_double",
+   prism="ts_triple_double",
+   syllable_len=2,
+  },
+  module_cn_en={
+   initial_quality=1,
+   dictionary="module_cn_en",
+   user_dict="module_cn_en",
+  },
+  module_en=utils.tbl_extend(
+   require("hoofcushion.ts_en").translator,
+   {tag="ts_en"}
+  ),
+  module_fnua_triple={
+   prefix="`",
+   trigger="space",
+   tag="module_fnua_triple",
+   tips="〔拼音反查〕",
+   dictionary="module_fnua_triple",
+   spelling_hints=99,
+   enable_user_dict=false,
+  },
+  recognizer={
+   patterns={
+    module_fnua_triple="`[^0-9]*$",
+   },
+  },
+ }
+)
+return schema

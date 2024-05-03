@@ -1,33 +1,13 @@
----@param obj any
----@return string
-local function serialize(obj)
- local t=type(obj)
- if t=="string" then
-  return '"'..obj:gsub('"','\\"')..'"'
- elseif t=="table" then
-  local ret=""
-  for k,v in pairs(obj) do
-   ret=ret.."["..serialize(k).."]="..serialize(v)..","
-  end
-  return "{"..ret:sub(1,-2).."}"
- end
- return tostring(obj)
-end
-local function prompt_connect(env,str)
- local comp=env.engine.context.composition
- if comp:empty()==false then
-  local seg=comp:back()
-  seg.prompt=seg.prompt..str
- end
-end
+local utils=require("utils")
 local ENV={
  io=nil,
  os=nil,
  debug=nil,
+ coroutine=nil,
  print=function(...)
   local text={}
   for _,v in ipairs({...}) do
-   table.insert(text,serialize(v))
+   table.insert(text,utils.serialize(v))
   end
   yield(Candidate("print",0,0,table.concat(text,"	"),"print"))
  end,
@@ -38,21 +18,17 @@ end
 local function loadstr(exp)
  return load(exp,"","t",ENV)
 end
-local function por(a,b)
- return a~=nil and a or b
-end
 local M={}
 M.translator={}
 function M.translator.init(env)
  local config=env.engine.schema.config
  local ns=env.name_space~="" and env.name_space or "execute"
- env.delimiter=por(config:get_string(ns.."/delimiter"),"|")
- env.fin=por(config:get_string(ns.."/fin"),";")
- env.greedy=por(config:get_bool(ns.."/greedy"),true)
- env.prefix=por(config:get_string(ns.."/prefix"),ns)
- env.tag=por(config:get_string(ns.."/tag"),ns)
- env.tips=por(config:get_string(ns.."/tips"),"Lua execute")
- env.quality=por(config:get_double(ns.."/initial_quality"),0)
+ env.delimiter=utils.por(config:get_string(ns.."/delimiter"),"|")
+ env.fin=utils.por(config:get_string(ns.."/fin"),";")
+ env.greedy=utils.por(config:get_bool(ns.."/greedy"),true)
+ env.prefix=utils.por(config:get_string(ns.."/prefix"),"")
+ env.tag=utils.por(config:get_string(ns.."/tag"),ns)
+ env.quality=utils.por(config:get_double(ns.."/initial_quality"),0)
  env.code_start=#env.prefix+1
  env.fin_p=env.fin.."$"
  function env.yield(text,comment,seg)
@@ -73,22 +49,26 @@ function M.translator.func(input,seg,env)
  local exp=input:sub(env.code_start,end_pos)
  exp=exp:gsub(env.delimiter," ")
  if exp=="" then
-  prompt_connect(env,env.tips)
+  utils.prompt(env,"Lua execute")
   return
  end
  env.yield(exp,"Expression",seg)
  local code=exp:find("return ") and exp or "return "..exp
  local fn,err=loadstr(code)
  if fn==nil then
-  env.yield(err,"Error",seg)
+  env.yield(err,"Comptime Error",seg)
   return
  end
- local result=fn()
- result=serialize(result)
- env.yield(result,"Value",seg)
- env.yield(exp.."="..result,"Equality",seg)
- if result:find([[^['"].*['"]$]])~=nil then
-  env.yield(result:sub(2,-2),"Without quote",seg)
+ local ok,ret=pcall(fn)
+ if ok==false then
+  env.yield(ret,"Runtime Error",seg)
+  return
+ end
+ ret=utils.serialize(ret)
+ env.yield(ret,"Value",seg)
+ env.yield(exp.."="..ret,"Equality",seg)
+ if ret:find([[^".*"$]])~=nil then
+  env.yield(ret:sub(2,-2),"Without quote",seg)
  end
 end
 return M

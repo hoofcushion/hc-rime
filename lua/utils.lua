@@ -1,43 +1,158 @@
 local M={}
-Sep=string.sub(package.config,1,1)
-local user=rime_api:get_user_data_dir()
-local data=rime_api:get_shared_data_dir()
-local function popen(filename,mode)
- local file=io.open(filename,mode)
- if file==nil then error("No file: "..filename) end
- return file
+local function err(msg,level)
+ msg=msg.."\nTraceback: "..debug.traceback()
+ error(msg,level)
 end
+---@param val any
+---@param expect type|type[]|fun(val:any):boolean,string
+function M.typecheck(val,expect)
+ local t=type(expect)
+ local ok,got
+ if t=="function" then
+  ok,got=expect(val)
+ else
+  got=type(val)
+  if t=="table" then
+   ok=M.tbl_find(expect,got)~=nil
+  else
+   ok=got==expect
+  end
+ end
+ if ok==false then
+  err("Expect "..M.serialize(expect)..", got "..got..": "..M.serialize(val))
+ end
+ return got
+end
+function M.tbl_find(tbl,val)
+ for k,v in pairs(tbl) do
+  if v==val then
+   return k
+  end
+ end
+end
+---@generic T:any
+---@param obj T
+---@return T
+function M.deepcopy(obj)
+ local t=type(obj)
+ if t~="table" then
+  return obj
+ end
+ local ret={}
+ for k,v in pairs(obj) do
+  ret[M.deepcopy(k)]=M.deepcopy(v)
+ end
+ local mt=getmetatable(obj)
+ if mt~=nil then
+  setmetatable(ret,M.deepcopy(mt))
+ end
+ return ret
+end
+---@generic T:table|function
+---@param ... T
+---@return T
+function M.tbl_extend(...)
+ local new={}
+ for i=1,select("#",...) do
+  local t=select(i,...)
+  local tp=M.typecheck(t,{"table","function"})
+  if tp=="function" then
+   t(new)
+  else
+   for k,v in pairs(t) do
+    local ex=new[k]
+    if type(ex)=="table" and type(v)=="table" then
+     if M.is_list(ex) and M.is_list(v) then
+      new[k]=M.list_extend(new[k],v)
+     else
+      new[k]=M.tbl_extend(new[k],v)
+     end
+    else
+     new[M.deepcopy(k)]=M.deepcopy(v)
+    end
+   end
+  end
+ end
+ return new
+end
+---@param ... any[]
+function M.list_extend(...)
+ local new={}
+ for i=1,select("#",...) do
+  local l=select(i,...)
+  M.typecheck(l,"table")
+  for _,v in ipairs(l) do
+   table.insert(new,v)
+  end
+ end
+ return new
+end
+M.os_sep=package.config:sub(1,1)
+---@param ... string
+function M.path_connect(...)
+ return table.concat({...},M.os_sep)
+end
+M.rime_path={
+ user=rime_api:get_user_data_dir(),
+ data=rime_api:get_shared_data_dir(),
+}
+function M.protect(fn,errfn)
+ return function(...)
+  local ret=errfn(fn(...))
+  return ret
+ end
+end
+---@overload fun(filename:string,mode:openmode):file*
+M.popen=
+ M.protect(io.open,function(file,errmsg)
+  if file==nil then error(errmsg) end
+  return file
+ end)
 local function check_file(filename)
  local file=io.open(filename,"r")
- if file==nil then return false end
- file:close()
- return filename
+ if file~=nil then
+  file:close()
+  return filename
+ end
 end
-local userS=user..Sep
-local dataS=data..Sep
+local function check_files(...)
+ for i=1,select("#",...) do
+  local filename=select(i,...)
+  local ok=check_file(filename)
+  if ok~=nil then
+   return filename
+  end
+ end
+end
 ---@return string
 function M.rime_file_exist(filename)
- return check_file(userS..filename) or check_file(dataS..filename) or error("could not find "..filename)
+ local ret=check_files(
+  M.path_connect(M.rime_path.user,filename),
+  M.path_connect(M.rime_path.data,filename)
+ )
+ if ret==nil then
+  error("could not find "..filename)
+ end
+ return ret
 end
 ---@param filename string
 ---@return file*
 function M.rime_file_open(filename,mode)
  ---@type file*
- return popen(M.rime_file_exist(filename),mode)
+ return M.popen(M.rime_file_exist(filename),mode)
 end
-function M.tipsEnv(env,str,add)
- M.tipsCtx(env.engine.context,str,add)
-end
-function M.tipsCtx(ctx,str,add)
- local comp=ctx.composition
+---@param str string
+---@param replace boolean?
+function M.prompt(env,str,replace)
+ local comp=env.engine.context.composition
  if comp:empty() then
   return
  end
  local seg=comp:back()
- if add then
-  seg.prompt=seg.prompt..str
- else
+ if replace then
   seg.prompt=str
+ else
+  seg.prompt=seg.prompt..str
  end
 end
 ---@param str string
@@ -72,40 +187,29 @@ local deepcopy_invalid_type={
  ["thread"]=true,
 }
 ---@generic I
----@param input I
+---@param obj I
 ---@return I
-local function deepcopy(input)
- local t=type(input)
+local function deepcopy(obj)
+ local t=type(obj)
  if deepcopy_invalid_type[t]==true then
   error("Cannot deepcopy type "..t)
  end
  if t~="table" then
-  return input
+  return obj
  end
  local copy={}
- for k,v in pairs(input) do
+ for k,v in pairs(obj) do
   k=deepcopy(k)
   v=deepcopy(v)
   copy[k]=v
  end
+ local mt=getmetatable(obj)
+ if mt~=nil then
+  setmetatable(copy,M.deepcopy(mt))
+ end
  return copy
 end
 M.deepcopy=deepcopy
-local function deepnext(tbl,key)
- local k,v=next(tbl,key)
- return deepcopy(k),deepcopy(v)
-end
-M.deepnext=deepnext
-local function deeppairs(tbl)
- return deepnext,tbl
-end
-M.deeppairs=deeppairs
----@enum (key) tbl_extend_mode
-local tbl_extend_mode_enum={
- ["force"]=true,
- ["keep"]=true,
- ["error"]=true,
-}
 function M.type_eq(value,target)
  return type(value)==target
 end
@@ -117,97 +221,54 @@ function M.type_all(target,...)
  end
  return true
 end
----@generic Main
----@param mode tbl_extend_mode
----@param ... Main
----@return Main
-function M.tbl_extend(mode,...)
- if M.type_all("table",...) then
-  error("expect all table for vararg")
+function M.tbl_count(tbl)
+ local count=0
+ for _ in pairs(tbl) do
+  count=count+1
  end
- if mode==nil or tbl_extend_mode_enum[mode]==nil then
-  error("bad arg #2")
- end
- local len=select("#",...)
- if len==1 then
-  error("too few vararg input, at least 2")
- end
- local main={}
- if mode=="force" then
-  for i=1,len do
-   for k,v in pairs(select(i,...)) do
-    main[k]=v
-   end
-  end
- elseif mode=="keep" then
-  for i=1,len do
-   for k,v in pairs(select(i,...)) do
-    if main[k]~=nil then
-     main[k]=v
-    end
-   end
-  end
- elseif mode=="error" then
-  for i=1,len do
-   for k,v in pairs(select(i,...)) do
-    if main[k]~=nil then
-     error("New index already exsists in: "..tostring(main))
-    end
-    main[k]=v
-   end
-  end
- end
- return main
+ return count
 end
----@generic Main
----@param mode tbl_extend_mode
----@param ... Main
----@return Main
-function M.tbl_deep_extend(mode,...)
- if M.type_all("table",...) then
-  error("expect all table for vararg")
- end
- if mode==nil or tbl_extend_mode_enum[mode]==nil then
-  error("bad arg #2")
- end
- local len=select("#",...)
- if len==1 then
-  error("too few vararg input, at least 2")
- end
- local main={}
- if mode=="force" then
-  for i=1,len do
-   for k,v in deeppairs(select(i,...)) do
-    if M.type_all("table",main[k],v) then
-     main[k]=M.tbl_deep_extend(mode,main[k],v)
-    else
-     main[k]=v
-    end
-   end
+function M.is_list(tbl)
+ return #tbl==M.tbl_count(tbl)
+end
+local is_address={
+ ["function"]=true,
+ ["userdata"]=true,
+ ["thread"]=true,
+}
+---@param obj any
+---@return string
+function M.serialize(obj)
+ local t=type(obj)
+ if t~="table" then
+  if t=="string" then
+   return '"'..obj:gsub('(["\\])',"\\%1")..'"'
   end
- elseif mode=="keep" then
-  for i=1,len do
-   for k,v in deeppairs(select(i,...)) do
-    if M.type_all("table",main[k],v) then
-     main[k]=M.tbl_deep_extend(mode,main[k],v)
-    elseif main[k]~=nil then
-     main[k]=v
-    end
-   end
+  if is_address[t]==true then
+   return '"'..tostring(obj)..'"'
   end
- elseif mode=="error" then
-  for i=1,len do
-   for k,v in deeppairs(select(i,...)) do
-    if M.type_all("table",main[k],v) then
-     main[k]=M.tbl_deep_extend(mode,main[k],v)
-    elseif main[k]~=nil then
-     error("New index already exsists in: "..tostring(main))
-    else
-     main[k]=v
-    end
-   end
-  end
+  return tostring(obj)
  end
- return main
+ local ret=setmetatable({},{__index=table})
+ if M.is_list(obj) then
+  for _,v in ipairs(obj) do
+   v=M.serialize(v)
+   ret:insert(v)
+  end
+ else
+  for k,v in pairs(obj) do
+   if not (type(k)=="string" and k:find("^[%a_]+[%a%d_]*$")) then
+    k=M.serialize(k)
+    k="["..k.."]"
+   end
+   v=M.serialize(v)
+   ret:insert(k.."="..v)
+  end
+  ret:sort()
+ end
+ return "{"..ret:concat(",").."}"
+end
+function M.por(a,b)
+ return a~=nil and a or b
 end
 return M

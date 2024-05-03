@@ -37,20 +37,20 @@ local Actions={
    env.warp_mode=true
    env.engine.context.caret_pos=0
    env.engine.context.caret_pos=#env.engine.context.input
-   Utils.tipsEnv(env,"跳转模式")
+   Utils.prompt(env,"跳转模式")
    return 1
   end,
  },
  [true]={
   start=function(_,env)
    env.warp_mode=false
-   Utils.tipsEnv(env,"跳转关闭")
+   Utils.prompt(env,"跳转关闭")
    return 1
   end,
   move=function(key,env)
    env.warp_mode=false
    env.engine.context.caret_pos=get_pos(env.engine.context:get_script_text(),keyMap[key.keycode])
-   Utils.tipsEnv(env,"跳转完毕")
+   Utils.prompt(env,"跳转完毕")
    return 1
   end,
   stop=function(_,env)

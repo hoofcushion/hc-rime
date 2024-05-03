@@ -61,6 +61,7 @@ unicode:
 custom_symbol:
  initial_quality: 64
  prefix: '\'
+ dictionary: custom_symbol
  tag: "custom_symbol"
  # comment: ""
  # tips: ""
@@ -75,11 +76,6 @@ custom_phrase:
  enable_user_dict: false
  enable_completion: false
  enable_sentence: false
-custom_symbol:
- initial_quality: 64
- dictionary: custom_symbol
- enable_user_dict: true
- tag: custom_symbol
 fil_for_all: &fil_for_all
  tips: all
  tags: [abc]

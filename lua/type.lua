@@ -64,9 +64,9 @@ function CandidateReg:append(item) end
 function Candidate(type,start,_end,text,comment) end
 --- ShadowCandidate 构造函数。
 ---@param cand Candidate
----@param type string
----@param text string
----@param comment string
+---@param type string|nil
+---@param text string|nil
+---@param comment string|nil
 ---@param inherit_comment string|nil
 ---@return ShadowCandidate
 function ShadowCandidate(cand,type,text,comment,inherit_comment) end
