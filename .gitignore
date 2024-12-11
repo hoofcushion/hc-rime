@@ -1,0 +1,14 @@
+*.schema.yaml
+*.trime.yaml
+*.userdb
+build
+*.custom.yaml
+installation.yaml
+log.txt
+recorder/*.txt
+recorder/output
+rime-ice/
+sync
+test.lua
+trash/
+user.yaml
