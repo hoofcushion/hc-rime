@@ -7,7 +7,6 @@ return {
   schema_list={
    {schema="ts_cn_double"},
    {schema="ts_cn_quanpin"},
-   {schema="ts_cn_triple"},
    {schema="ts_en"},
   },
   switcher={
