@@ -7,7 +7,6 @@ installation.yaml
 log.txt
 recorder/*.txt
 recorder/output
-rime-ice/
 sync
 test.lua
 trash/
