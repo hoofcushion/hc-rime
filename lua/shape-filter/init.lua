@@ -68,7 +68,6 @@ end
 local M={}
 M.processor={
  init=function(env)
-  ShapeFilter.env=env
   local config=env.engine.schema.config
   local ns=env.name_space
   H.short_word_first=std.por(config:get_string(ns.."/short_word_first"),false)
@@ -98,6 +97,7 @@ M.processor={
   ctx.commit_notifier:connect(inactivate)
  end,
  func=function(key,env)
+  ShapeFilter.env=env
   if key:release() then
    return 2
   end

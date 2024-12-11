@@ -61,7 +61,12 @@ function M.rime_file_exist(filename)
   std.fs.path_connect(M.rime_path.data,filename)
  )
  if ret==nil then
-  error("could not find "..filename)
+  local f=io.open(filename,"w")
+  if f then
+   f:close()
+  else
+   error("could not find "..filename)
+  end
  end
  return ret
 end
