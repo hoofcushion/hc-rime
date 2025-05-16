@@ -291,37 +291,38 @@ local function serialize_print(...)
   args[i]=serialize(arg)
  end
  print(unpack(args))
+ log.error(("[lua-print]: %s"):format(table.concat(args,"\t")))
 end
-local std={}
-std.por=por
-std.print=serialize_print
-std.deepcopy=deepcopy
-std.serialize=serialize
-std.is_varname=is_varname
-std.tobool=tobool
-std.totable=totable
-std.purify=purify(purify,{
+rime={}
+rime.por=por
+rime.print=serialize_print
+rime.deepcopy=deepcopy
+rime.serialize=serialize
+rime.is_varname=is_varname
+rime.tobool=tobool
+rime.totable=totable
+rime.purify=purify(purify,{
  "function",
  "table",
  {"boolean","nil"},
 })
-std.depurify=purify(depurify,{"function"})
+rime.depurify=purify(depurify,{"function"})
 ---@generic base
 ---@generic new
 ---@param base base?
 ---@param new new?
 ---@return base|new
-function std.class(base,new)
+function rime.class(base,new)
  if base==nil then return {} end
  if new==nil then new={} end
  setmetatable(new,{__index=base})
  return new
 end
-std.class=purify(std.class,{
+rime.class=purify(rime.class,{
  {"table","nil"},
  {"table","nil"},
 })
-std.mt=setmetatable({},{
+rime.mt=setmetatable({},{
  __index=function(t,k)
   local ret=rawget(t,k)
   if ret==nil then
@@ -336,28 +337,28 @@ std.mt=setmetatable({},{
   return ret
  end,
 })
-std.io={}
-function std.io.open(filename,mode)
+rime.io={}
+function rime.io.open(filename,mode)
  local file,err=io.open(filename,mode)
  if file==nil then
   error(err)
  end
  return file
 end
-std.io.open=purify(std.io.open,{"string","string"})
-std.fs={}
-std.fs.os_sep=package.config:sub(1,1)
+rime.io.open=purify(rime.io.open,{"string","string"})
+rime.fs={}
+rime.fs.os_sep=package.config:sub(1,1)
 ---@param ... string|number
-function std.fs.path_connect(...)
- return table.concat({...},std.fs.os_sep)
+function rime.fs.path_connect(...)
+ return table.concat({...},rime.fs.os_sep)
 end
-std.fs.path_connect=purify(std.fs.path_connect,{{"string","number"}})
-std.utf8={}
+rime.fs.path_connect=purify(rime.fs.path_connect,{{"string","number"}})
+rime.utf8={}
 ---@param str string
 ---@param start integer
 ---@param final integer|nil
 ---@return string
-function std.utf8.sub(str,start,final)
+function rime.utf8.sub(str,start,final)
  local len_p=#str+1
  if final==nil then
   local i1=start<0 and len_p or 1
@@ -373,15 +374,15 @@ function std.utf8.sub(str,start,final)
  str=string.sub(str,start,final)
  return str
 end
-std.utf8.sub=purify(std.utf8.sub,{"string","number",{"number","nil"}})
+rime.utf8.sub=purify(rime.utf8.sub,{"string","number",{"number","nil"}})
 test(function()
- equality_assert(std.utf8.sub("hello",1,3),"hel")
- equality_assert(std.utf8.sub("你好",1,1),"你")
- equality_assert(std.utf8.sub("好",-1),"好")
+ equality_assert(rime.utf8.sub("hello",1,3),"hel")
+ equality_assert(rime.utf8.sub("你好",1,1),   "你")
+ equality_assert(rime.utf8.sub("好",-1),     "好")
 end)
 ---@param str string
 ---@return string
-function std.utf8.reverse(str)
+function rime.utf8.reverse(str)
  local tbl={}
  local i=utf8.len(str) --[[@as integer]]
  for _,c in utf8.codes(str) do
@@ -390,26 +391,26 @@ function std.utf8.reverse(str)
  end
  return table.concat(tbl)
 end
-std.utf8.reverse=purify(std.utf8.reverse,{"string"})
+rime.utf8.reverse=purify(rime.utf8.reverse,{"string"})
 test(function()
- equality_assert(std.utf8.reverse("hello"),"olleh")
- equality_assert(std.utf8.reverse("你好"),"好你")
+ equality_assert(rime.utf8.reverse("hello"),"olleh")
+ equality_assert(rime.utf8.reverse("你好"),   "好你")
 end)
-function std.utf8.tolist(str)
+function rime.utf8.tolist(str)
  local chars={}
  for _,c in utf8.codes(str) do
   table.insert(chars,utf8.char(c))
  end
  return chars
 end
-std.utf8.tolist=purify(std.utf8.tolist,{"string"})
+rime.utf8.tolist=purify(rime.utf8.tolist,{"string"})
 test(function()
- equality_assert(std.utf8.tolist("hello"),{"h","e","l","l","o"})
- equality_assert(std.utf8.tolist("你好"),{"你","好"})
+ equality_assert(rime.utf8.tolist("hello"),{"h","e","l","l","o"})
+ equality_assert(rime.utf8.tolist("你好"),   {"你","好"})
 end)
-function std.utf8.split(str,sep)
+function rime.utf8.split(str,sep)
  local ret={}
- local seps=std.utf8.tolist(sep)
+ local seps=rime.utf8.tolist(sep)
  local set=toset(seps)
  local word=""
  for _,c in utf8.codes(str) do
@@ -424,35 +425,81 @@ function std.utf8.split(str,sep)
  table.insert(ret,word)
  return ret
 end
-std.utf8.split=purify(std.utf8.split,{"string","string"})
+rime.utf8.split=purify(rime.utf8.split,{"string","string"})
 test(function()
- equality_assert(std.utf8.split("hello world"," "),{"hello","world"})
- equality_assert(std.utf8.split("你好，世界","，"),{"你好","世界"})
+ equality_assert(rime.utf8.split("hello world"," "),{"hello","world"})
+ equality_assert(rime.utf8.split("你好，世界","，"),      {"你好","世界"})
 end)
-std.str={}
----@param str string
----@param sep string
-function std.str.split(str,sep)
- local slices={}
- local pattern="[^"..std.str.escape_in_brace(sep).."]+"
- for slice in string.gmatch(str,pattern) do
-  table.insert(slices,slice)
+rime.str={}
+local function _gsplit(s)
+ if s.done then
+  return
  end
- return slices
+ -- special case for sep == ""
+ -- simply iterate all chars
+ if s.sep=="" then
+  if s.i==s.len then
+   s.done=true
+  end
+  local i=s.i
+  s.i=s.i+1
+  return s.str:sub(i,i)
+ end
+ if s.trimempty and s.i>s.len then
+  return
+ end
+ -- normal split using string.find
+ local _i,_e=string.find(s.str,s.sep,s.i,s.plain)
+ if _i==nil then
+  s.done=true
+  return s.str:sub(s.i)
+ end
+ --- simply skip this iteration
+ if s.trimempty and _e==1 then
+  s.i=s.i+1
+  return _gsplit(s)
+ end
+ -- string.find("a|c","|") returns (2,2)
+ -- so use previous i and e-1 gives "a"
+ local i=s.i
+ s.i=_e+1
+ return s.str:sub(i,_e-1)
 end
-std.str.split=purify(std.str.split,{"string","string"})
+local function gsplit(str,sep,opts)
+ local plain,trimempty
+ if type(opts)=="boolean" then
+  plain=opts
+ else
+  opts=opts or {}
+  plain,trimempty=opts.plain,opts.trimempty
+ end
+ local s={str=str,sep=sep,i=1,len=#str,plain=plain,trimempty=trimempty,done=false}
+ --- match vim.gsplit's function signature
+ return function()
+  return _gsplit(s)
+ end
+end
+local function split(str,sep,opts)
+ local list={}
+ for s in gsplit(str,sep,opts) do
+  table.insert(list,s)
+ end
+ return list
+end
+rime.str.split=split
+rime.str.split=purify(rime.str.split,{"string",{"string","nil"},{"table","nil"}})
 test(function()
- equality_assert(std.str.split("hello world"," "),{"hello","world"})
+ equality_assert(rime.str.split("hello world"," "),{"hello","world"})
 end)
 ---@param str string
-function std.str.tolist(str)
+function rime.str.tolist(str)
  local chars={}
  for char in string.gmatch(str,".") do
   table.insert(chars,char)
  end
  return chars
 end
-std.str.tolist=purify(std.str.tolist,{"string"})
+rime.str.tolist=purify(rime.str.tolist,{"string"})
 local escape_map={
  ["^"]="%^",
  ["$"]="%$",
@@ -467,70 +514,70 @@ local escape_map={
  ["?"]="%?",
  ["%"]="%%",
 }
-std.str.escape_map=escape_map
+rime.str.escape_map=escape_map
 ---@param str string
-function std.str.escape(str)
+function rime.str.escape(str)
  return str:gsub("[%^%%%[%]%-$().*+?]",escape_map)
 end
-std.str.escape=purify(std.str.escape,{"string"})
+rime.str.escape=purify(rime.str.escape,{"string"})
 ---@param str string
-function std.str.escape_in_brace(str)
+function rime.str.escape_in_brace(str)
  return str:gsub("[%^%%%[%]%-]",escape_map)
 end
-std.str.escape_in_brace=purify(std.str.escape_in_brace,{"string"})
+rime.str.escape_in_brace=purify(rime.str.escape_in_brace,{"string"})
 ---@param str string
-function std.str.escape_to(str)
+function rime.str.escape_to(str)
  return str:gsub("%%",escape_map)
 end
-std.str.escape_to=purify(std.str.escape_to,{"string"})
+rime.str.escape_to=purify(rime.str.escape_to,{"string"})
 ---@param s       string|number
 ---@param pattern string|number
 ---@param init?   integer
 ---@param plain?  boolean
-function std.str.rfind(s,pattern,init,plain)
+function rime.str.rfind(s,pattern,init,plain)
  return string.reverse(s):find(pattern,init,plain)
 end
-std.str.rfind=purify(std.str.rfind,{{"string","number"},"any","any","any"})
+rime.str.rfind=purify(rime.str.rfind,{{"string","number"},"any","any","any"})
 ---@param str string
 ---@param from string
 ---@param to string
-function std.str.replace(str,from,to)
- from=std.str.escape(from)
- to=std.str.escape(to)
+function rime.str.replace(str,from,to)
+ from=rime.str.escape(from)
+ to=rime.str.escape(to)
  return str:gsub(from,to)
 end
-std.str.replace=purify(std.str.replace,{"string","string","string"})
-function std.str.endswith(str,suf)
+rime.str.replace=purify(rime.str.replace,{"string","string","string"})
+function rime.str.endswith(str,suf)
  return string.sub(str,- #suf)==suf
 end
-std.str.endswith=purify(std.str.endswith,{"string","string"})
-function std.str.startswith(str,pre)
+rime.str.endswith=purify(rime.str.endswith,{"string","string"})
+function rime.str.startswith(str,pre)
  return string.sub(str,1,#pre)==pre
 end
-std.str.startswith=purify(std.str.startswith,{"string","string"})
-function std.str.strip(str,chars)
+rime.str.startswith=purify(rime.str.startswith,{"string","string"})
+function rime.str.strip(str,chars)
  if chars==nil then
   return string.gsub(str,"^%s*(.-)%s*$","%1")
  end
- local pattern=std.str.escape_in_brace(chars)
+ local pattern=rime.str.escape_in_brace(chars)
  return string.gsub(str,"^["..pattern.."]*(.-)["..pattern.."]*$","%1")
 end
-std.str.strip=purify(std.str.strip,{"string",{"string","nil"}})
+rime.str.strip=purify(rime.str.strip,{"string",{"string","nil"}})
 test(function()
- equality_assert(std.str.strip("  hello  "),"hello")
+ equality_assert(rime.str.strip("  hello  "),"hello")
 end)
-function std.str.splitlines(str)
+function rime.str.splitlines(str)
  local ret={}
  for s in string.gmatch(str,"(.-)\r?\n") do
   table.insert(ret,s)
  end
  return ret
 end
-std.str.splitlines=purify(std.str.splitlines,{"string"})
-std.tbl={}
+rime.str.splitlines=purify(rime.str.splitlines,{"string"})
+rime.tbl={}
 ---@param tbl table
 ---@param num integer
-function std.tbl.ltake(tbl,num)
+function rime.tbl.ltake(tbl,num)
  if num==0 then return {} end
  local ret={}
  for i=1,num,1 do
@@ -538,10 +585,10 @@ function std.tbl.ltake(tbl,num)
  end
  return ret
 end
-std.tbl.ltake=purify(std.tbl.ltake,{"table","number"})
+rime.tbl.ltake=purify(rime.tbl.ltake,{"table","number"})
 ---@param tbl table
 ---@param num integer?
-function std.tbl.rtake(tbl,num)
+function rime.tbl.rtake(tbl,num)
  if num==0 then return {} end
  local ret={}
  for _=1,num or #tbl do
@@ -549,45 +596,48 @@ function std.tbl.rtake(tbl,num)
  end
  return ret
 end
-std.tbl.rtake=purify(std.tbl.rtake,{"table","number"})
+rime.tbl.rtake=purify(rime.tbl.rtake,{"table","number"})
 ---@param tbl table
-function std.tbl.reverse(tbl)
+function rime.tbl.reverse(tbl)
  local ret={}
  for _=1,#tbl do
   table.insert(ret,table.remove(tbl))
  end
  return ret
 end
-std.tbl.reverse=purify(std.tbl.reverse,{"table"})
----@param tbl table
-function std.tbl.map(tbl,func)
+rime.tbl.reverse=purify(rime.tbl.reverse,{"table"})
+---@generic K,T,V
+---@param tbl table<K,T>
+---@param func fun(k:K,v:T):V
+---@return table<K,V>
+function rime.tbl.map(tbl,func)
  local ret={}
  for k,v in pairs(tbl) do
   ret[k]=func(k,v)
  end
  return ret
 end
-std.tbl.map=purify(std.tbl.map,{"table","function"})
+rime.tbl.map=purify(rime.tbl.map,{"table","function"})
 ---@param tbl table
-function std.tbl.each(tbl,func)
+function rime.tbl.each(tbl,func)
  for k,v in pairs(tbl) do
   func(k,v)
  end
  return tbl
 end
-std.tbl.each=purify(std.tbl.each,{"table","function"})
+rime.tbl.each=purify(rime.tbl.each,{"table","function"})
 ---@param tbl table
 ---@param value any
 ---@param target any|fun(any):boolean
 ---@param offset integer?
-function std.tbl.insert_at(tbl,value,target,offset)
- table.insert(tbl,std.tbl.find(tbl,target)+(offset or 0),value)
+function rime.tbl.insert_at(tbl,value,target,offset)
+ table.insert(tbl,rime.tbl.find(tbl,target)+(offset or 0),value)
  return tbl
 end
-std.tbl.insert_at=purify(std.tbl.insert_at,{"table","any","any",{"number","nil"}})
+rime.tbl.insert_at=purify(rime.tbl.insert_at,{"table","any","any",{"number","nil"}})
 ---@param tbl table
 ---@param target any|fun(any):boolean
-function std.tbl.find(tbl,target)
+function rime.tbl.find(tbl,target)
  if type(target)=="function" then
   for i,v in pairs(tbl) do
    if target(v) then return i end
@@ -597,29 +647,29 @@ function std.tbl.find(tbl,target)
   if v==target then return i end
  end
 end
-std.tbl.find=purify(std.tbl.find,{{"table"}})
-std.tbl.toset=toset
-std.tbl.toset=purify(std.tbl.toset,{"table"})
+rime.tbl.find=purify(rime.tbl.find,{{"table"}})
+rime.tbl.toset=toset
+rime.tbl.toset=purify(rime.tbl.toset,{"table"})
 ---@param tbl table
-function std.tbl.count(tbl)
+function rime.tbl.count(tbl)
  local count=0
  for _ in pairs(tbl) do
   count=count+1
  end
  return count
 end
-std.tbl.count=purify(std.tbl.count,{"table"})
+rime.tbl.count=purify(rime.tbl.count,{"table"})
 ---@param tbl table
 ---@param field any
-function std.tbl.check(tbl,field)
+function rime.tbl.check(tbl,field)
  if tbl[field]==nil then
   tbl[field]={}
  end
 end
-std.tbl.check=purify(std.tbl.check,{"table","string"})
+rime.tbl.check=purify(rime.tbl.check,{"table","string"})
 ---@param tbl table
 ---@param ... any
-function std.tbl.get(tbl,...)
+function rime.tbl.get(tbl,...)
  local keys={...}
  local t=tbl
  for _,v in ipairs(keys) do
@@ -630,11 +680,11 @@ function std.tbl.get(tbl,...)
  end
  return t
 end
-std.tbl.get=purify(std.tbl.get,{{"table","string"},"nonil"})
+rime.tbl.get=purify(rime.tbl.get,{{"table","string"},"nonil"})
 ---@param tbl table
 ---@param value any
 ---@param ... any
-function std.tbl.set(tbl,value,...)
+function rime.tbl.set(tbl,value,...)
  local ret=tbl
  local e=select("#",...)
  for i=1,e-1 do
@@ -646,38 +696,38 @@ function std.tbl.set(tbl,value,...)
  end
  ret[select(e,...)]=value
 end
-std.tbl.set=purify(std.tbl.set,{"table","any","nonil"},true)
+rime.tbl.set=purify(rime.tbl.set,{"table","any","nonil"},true)
 ---@param tbl table
-function std.tbl.is_list(tbl)
- return #tbl==std.tbl.count(tbl)
+function rime.tbl.is_list(tbl)
+ return #tbl==rime.tbl.count(tbl)
 end
-std.tbl.is_list=purify(std.tbl.is_list,{"table"})
+rime.tbl.is_list=purify(rime.tbl.is_list,{"table"})
 ---@param tbl table
-function std.tbl.is_empty(tbl)
+function rime.tbl.is_empty(tbl)
  return next(tbl)==nil
 end
-std.tbl.is_empty=purify(std.tbl.is_empty,{"table"})
+rime.tbl.is_empty=purify(rime.tbl.is_empty,{"table"})
 ---@param tbl table
-function std.tbl.keys(tbl)
+function rime.tbl.keys(tbl)
  local ret={}
  for k in pairs(tbl) do
   table.insert(ret,k)
  end
  return ret
 end
-std.tbl.keys=purify(std.tbl.keys,{"table"})
+rime.tbl.keys=purify(rime.tbl.keys,{"table"})
 ---@param tbl table
-function std.tbl.values(tbl)
+function rime.tbl.values(tbl)
  local ret={}
  for _,v in pairs(tbl) do
   table.insert(ret,v)
  end
  return ret
 end
-std.tbl.values=purify(std.tbl.values,{"table"})
+rime.tbl.values=purify(rime.tbl.values,{"table"})
 ---@param tbl table
 ---@param cond fun(...):boolean
-function std.tbl.all(tbl,cond)
+function rime.tbl.all(tbl,cond)
  for key,value in pairs(tbl) do
   if cond(key,value)==false then
    return false
@@ -685,10 +735,10 @@ function std.tbl.all(tbl,cond)
  end
  return true
 end
-std.tbl.all=purify(std.tbl.all,{"table","function"})
+rime.tbl.all=purify(rime.tbl.all,{"table","function"})
 ---@param tbl table
 ---@param cond fun(...):boolean
-function std.tbl.any(tbl,cond)
+function rime.tbl.any(tbl,cond)
  for k,v in pairs(tbl) do
   if cond(k,v)==true then
    return true
@@ -696,11 +746,11 @@ function std.tbl.any(tbl,cond)
  end
  return false
 end
-std.tbl.any=purify(std.tbl.any,{"table","function"})
-std.list={}
+rime.tbl.any=purify(rime.tbl.any,{"table","function"})
+rime.list={}
 ---@param tbl table
 ---@param cond fun(...):boolean
-function std.list.filter(tbl,cond)
+function rime.list.filter(tbl,cond)
  local ret={}
  for _,v in ipairs(tbl) do
   if cond(v) then
@@ -709,17 +759,25 @@ function std.list.filter(tbl,cond)
  end
  return ret
 end
-std.list.filter=purify(std.list.filter,{"table","function"})
+rime.list.filter=purify(rime.list.filter,{"table","function"})
 ---@param list any[]
 ---@param func fun(...):any
-function std.list.map(list,func)
+function rime.list.map(list,func)
  local ret={}
  for i,v in ipairs(list) do
   table.insert(ret,func(i,v))
  end
  return ret
 end
-std.list.map=purify(std.list.map,{"table","function"})
+rime.list.map=purify(rime.list.map,{"table","function"})
+function rime.list.index_by(list,func)
+ local ret={}
+ for i,v in ipairs(list) do
+  ret[func(i,v)]=v
+ end
+ return ret
+end
+rime.list.index_by=purify(rime.list.index_by,{"table","function"})
 local function extend_list(list,l)
  local len=#list
  if len>8 then
@@ -735,18 +793,18 @@ end
 ---@param list T[]
 ---@param ... T[]
 ---@return T[]
-function std.list.extend(list,...)
+function rime.list.extend(list,...)
  for i=1,select("#",...) do
   extend_list(list,select(i,...))
  end
  return list
 end
-std.list.extend=purify(std.list.extend,{"table","nonil"},true)
+rime.list.extend=purify(rime.list.extend,{"table","nonil"},true)
 ---@generic T
 ---@param ... T[]
 ---@return T[]
-function std.list.combine(...)
- return std.list.extend({},...)
+function rime.list.combine(...)
+ return rime.list.extend({},...)
 end
 local function flatten(list,l,limit)
  if limit<=0 or type(l)~="table" then
@@ -761,18 +819,18 @@ end
 ---@param list any[]
 ---@param limit number
 ---@return any[]
-function std.list.flatten(list,limit)
+function rime.list.flatten(list,limit)
  if limit==nil then limit=math.huge end
  ---@diagnostic disable-next-line: return-type-mismatch
  return flatten({},list,limit)
 end
-std.list.flatten=purify(std.list.flatten,{"table","number"})
+rime.list.flatten=purify(rime.list.flatten,{"table","number"})
 ---@param s number
 ---@param e number
 ---@param g number
 ---@param func (fun(index:number):any)?
 ---@return any[]
-function std.list.range(s,e,g,func)
+function rime.list.range(s,e,g,func)
  local list={}
  if func==nil then
   for i=s,e,g do
@@ -785,12 +843,122 @@ function std.list.range(s,e,g,func)
  end
  return list
 end
-std.list.range=purify(std.list.range,{"number","number","number",{"function","nil"}})
+rime.list.range=purify(rime.list.range,{"number","number","number",{"function","nil"}})
 ---@param list any[]
 ---@param s integer
 ---@param e integer
-function std.list.slice(list,s,e)
+function rime.list.slice(list,s,e)
  return table.move(list,s,e or #list,1,{})
 end
-std.list.slice=purify(std.list.slice,{"table","number","number"})
-return std
+rime.list.slice=purify(rime.list.slice,{"table","number","number"})
+---@generic T:table|function
+---@param ... T
+---@return T
+function rime.extend(...)
+ local new
+ for i=1,select("#",...) do
+  local t=select(i,...)
+  local tp=type(t)
+  if tp=="function" then
+   local ret=t(new)
+   if ret~=nil then
+    new=ret
+   end
+  elseif tp=="table" then
+   if type(new)~="table" then
+    new={}
+   end
+   if rime.tbl.is_list(new) and rime.tbl.is_list(t) then
+    new=rime.list.extend(new,t)
+   else
+    for k,v in pairs(t) do
+     local nv=new[k]
+     if type(nv)=="table" and type(v)=="table" and rime.tbl.is_list(nv) and rime.tbl.is_list(v) then
+      new[k]=rime.list.extend(nv,v)
+     else
+      new[k]=rime.extend(nv,v)
+     end
+    end
+   end
+  else
+   new=t
+  end
+ end
+ return new
+end
+rime.rime_path={
+ user=rime_api:get_user_data_dir(),
+ data=rime_api:get_shared_data_dir(),
+}
+local function check_file(filename)
+ local file=io.open(filename,"r")
+ if file~=nil then
+  file:close()
+  return filename
+ end
+end
+local function check_files(...)
+ for i=1,select("#",...) do
+  local filename=select(i,...)
+  local ok=check_file(filename)
+  if ok~=nil then
+   return filename
+  end
+ end
+end
+---@return string
+function rime.rime_file_exist(filename)
+ local ret=check_files(
+  rime.fs.path_connect(rime.rime_path.user,filename),
+  rime.fs.path_connect(rime.rime_path.data,filename)
+ )
+ if ret==nil then
+  local f=io.open(filename,"w")
+  if f then
+   f:close()
+  else
+   error("could not find "..filename)
+  end
+ end
+ return ret
+end
+---@param str string
+---@param replace boolean?
+function rime.prompt(env,str,replace)
+ local comp=env.engine.context.composition
+ if comp:empty() then
+  return
+ end
+ local seg=comp:back()
+ if replace then
+  seg.prompt=str
+ else
+  seg.prompt=seg.prompt..str
+ end
+end
+---@param str string
+---@param start integer
+---@param final integer|nil
+---@return string
+function rime.utf8_sub(str,start,final)
+ local len_p=#str+1
+ if final==nil then
+  local i1=start<0 and len_p or 1
+  start=utf8.offset(str,start,i1)
+  str=string.sub(str,start)
+  return str
+ end
+ local i1=start<0 and len_p or 1
+ local i2=final<0 and len_p or 1
+ final=final+1
+ start,final=utf8.offset(str,start,i1),utf8.offset(str,final,i2)
+ final=final-1
+ str=string.sub(str,start,final)
+ return str
+end
+do
+ kRejected=0
+ kAccepted=1
+ kNoop=2
+end
+return rime

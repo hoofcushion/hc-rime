@@ -1,4 +1,4 @@
-local utils=require("utils")
+
 return {
  schema={
   schema_id="module_cn_en_quanpin",
@@ -7,7 +7,7 @@ return {
   dictionary="module_cn_en_quanpin",
  },
  speller={
-  algebra=utils.extend(
+  algebra=rime.extend(
    require("hoofcushion.schema.han_quanpin").speller.algebra,
    {"xform/`//"}
   ),

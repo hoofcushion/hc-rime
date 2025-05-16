@@ -227,3 +227,77 @@ function MenuReg:empty() end
 --- Menu 构造函数。
 --- @return Menu
 function Menu() end
+---@alias engine_name
+---| "processor"
+---| "translator"
+---| "filter"
+---| "segmentor"
+---@alias lua_engine
+---| engine_processor_simp
+---| engine_processor_full
+---| engine_translator_simp
+---| engine_translator_full
+---| engine_filter_simp
+---| engine_filter_full
+---| engine_segmentor_simp
+---| engine_segmentor_full
+---@class engine
+---@field processor engine_processor_simp|engine_processor_full|nil
+---@field translator engine_translator_simp|engine_translator_full|nil
+---@field filter engine_filter_simp|engine_filter_full|nil
+---@field segmentor engine_segmentor_simp|engine_segmentor_full|nil
+---@alias engine_processor_simp fun(key:KeyEvent,env):0|1|2
+---@class engine_processor_full
+---@field init fun(env)?
+---@field func fun(key:KeyEvent,env):0|1|2
+---@field fini fun(env)?
+---@alias engine_translator_simp fun(input:string,seg,env)
+---@class engine_translator_full
+---@field init fun(env)?
+---@field func fun(input:string,seg,env)
+---@field fini fun(env)?
+---@alias engine_filter_simp fun(input:Translation,env)
+---@class engine_filter_full
+---@field init fun(env)?
+---@field func fun(input:Translation,env)
+---@field fini fun(env)?
+---@field tags_match (fun(seg,env):boolean)?
+---@alias engine_segmentor_simp fun(seg,env)
+---@class engine_segmentor_full
+---@field init fun(env)?
+---@field func fun(seg,env)
+---@field fini fun(env)?
+---@type table<string,lua_engine>|engine
+--- 按键事件对象，当按键被按下/释放时产生
+---@class KeyEvent
+---@field keycode number 按键值（非ASCII字符时与codepoint不等）
+---@field modifier number 当前按下状态的修饰键（bitwise OR组合）
+local KeyEvent={}
+--- 构造函数
+---@param keycode number 按键代码
+---@param modifier number 修饰键状态
+---@return KeyEvent
+function KeyEvent.new(keycode,modifier) end
+---@return boolean 触发时Shift是否按下
+function KeyEvent:shift() end
+---@return boolean 触发时Ctrl是否按下
+function KeyEvent:ctrl() end
+---@return boolean 触发时Alt/Option是否按下
+function KeyEvent:alt() end
+---@return boolean 触发时CapsLock是否激活
+function KeyEvent:caps() end
+---@return boolean 触发时Win/Command是否按下
+function KeyEvent:super() end
+---@return boolean 是否因修饰键释放触发
+function KeyEvent:release() end
+--- 获取可读的字符串表示
+---@return string 格式：修饰键+按键名（如"Shift+Ctrl+A"或"0x001B"）
+function KeyEvent:repr() end
+--- 相等性比较
+---@param other KeyEvent 要比较的另一个事件
+---@return boolean 是否等价（键值和修饰状态相同）
+function KeyEvent:eq(other) end
+--- 小于比较（用于排序）
+---@param other KeyEvent 要比较的另一个事件
+---@return boolean 当前对象是否应排在参数前
+function KeyEvent:lt(other) end

@@ -1,4 +1,3 @@
-local utils = require "utils"
 local function por(a,b)
  return a~=nil and a or b
 end
@@ -12,7 +11,7 @@ function M.processor.init(env)
  H.trigger=por(config:get_string(ns.."/trigger"),"`")
  H.tag=por(config:get_string(ns.."/tag"),ns)
  H.alphabet=config:get_string("speller/alphabet")
- H.pattern="[^"..std.str.escape_in_brace(H.alphabet).."]"
+ H.pattern="[^"..rime.str.escape_in_brace(H.alphabet).."]"
 end
 function M.processor.func(key,env)
  local ctx=env.engine.context

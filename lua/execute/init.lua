@@ -1,4 +1,4 @@
-local utils=require("utils")
+
 local ENV={
  io=nil,
  os=nil,
@@ -7,7 +7,7 @@ local ENV={
  print=function(...)
   local text={}
   for _,v in ipairs({...}) do
-   table.insert(text,std.serialize(v))
+   table.insert(text,rime.serialize(v))
   end
   yield(Candidate("print",0,0,table.concat(text,"	"),"print"))
  end,
@@ -23,12 +23,12 @@ M.translator={}
 function M.translator.init(env)
  local config=env.engine.schema.config
  local ns=env.name_space~="" and env.name_space or "execute"
- env.delimiter=std.por(config:get_string(ns.."/delimiter"),"|")
- env.fin=std.por(config:get_string(ns.."/fin"),";")
- env.greedy=std.por(config:get_bool(ns.."/greedy"),true)
- env.prefix=std.por(config:get_string(ns.."/prefix"),"")
- env.tag=std.por(config:get_string(ns.."/tag"),ns)
- env.quality=std.por(config:get_double(ns.."/initial_quality"),0)
+ env.delimiter=rime.por(config:get_string(ns.."/delimiter"),"|")
+ env.fin=rime.por(config:get_string(ns.."/fin"),";")
+ env.greedy=rime.por(config:get_bool(ns.."/greedy"),true)
+ env.prefix=rime.por(config:get_string(ns.."/prefix"),"")
+ env.tag=rime.por(config:get_string(ns.."/tag"),ns)
+ env.quality=rime.por(config:get_double(ns.."/initial_quality"),0)
  env.code_start=#env.prefix+1
  env.fin_p=env.fin.."$"
  function env.yield(text,comment,seg)
@@ -49,7 +49,7 @@ function M.translator.func(input,seg,env)
  local exp=input:sub(env.code_start,end_pos)
  exp=exp:gsub(env.delimiter," ")
  if exp=="" then
-  utils.prompt(env,"Lua execute")
+  rime.prompt(env,"Lua execute")
   return
  end
  env.yield(exp,"Expression",seg)
@@ -64,7 +64,7 @@ function M.translator.func(input,seg,env)
   env.yield(ret,"Runtime Error",seg)
   return
  end
- ret=std.serialize(ret)
+ ret=rime.serialize(ret)
  env.yield(ret,"Value",seg)
  env.yield(exp.."="..ret,"Equality",seg)
  if ret:find([[^".*"$]])~=nil then

@@ -1,4 +1,4 @@
-local Utils=require("utils")
+
 local coderange=require("commit-recorder.coderange_list")
 local function bs_inrange(code)
  if code<=coderange.minimum
@@ -24,7 +24,7 @@ local function bs_inrange(code)
 end
 local function is_all_han(str)
  for i=1,utf8.len(str) do
-  local char=Utils.utf8_sub(str,i,i)
+  local char=rime.utf8_sub(str,i,i)
   local code=utf8.codepoint(char)
   if bs_inrange(code)==false then
    return false
@@ -65,9 +65,9 @@ local function save(str,path)
  file:close()
 end
 local PATHS={
- char=Utils.rime_file_exist("recorder/char.txt"),
- word=Utils.rime_file_exist("recorder/word.txt"),
- other=Utils.rime_file_exist("recorder/other.txt"),
+ char=rime.rime_file_exist("recorder/char.txt"),
+ word=rime.rime_file_exist("recorder/word.txt"),
+ other=rime.rime_file_exist("recorder/other.txt"),
 }
 local function callback(ctx)
  local commit_text=ctx:get_commit_text()

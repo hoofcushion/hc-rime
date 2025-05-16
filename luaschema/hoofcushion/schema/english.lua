@@ -1,7 +1,7 @@
-local utils=require("utils")
+
 local keymaps=require("hoofcushion.keymaps")
 local switchers=require("hoofcushion.switchers")
-local schema=utils.extend(
+local schema=rime.extend(
  require("hoofcushion.schema.base"),
  {
   schema={

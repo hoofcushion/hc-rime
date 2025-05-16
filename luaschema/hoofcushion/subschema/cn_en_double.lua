@@ -1,4 +1,4 @@
-local utils=require("utils")
+
 return {
  schema={
   schema_id="module_cn_en_double",
@@ -8,7 +8,7 @@ return {
   prism="module_cn_en_double"
  },
  speller={
-  algebra=utils.extend(
+  algebra=rime.extend(
    require("hoofcushion.schema.han_quanpin").speller.algebra,
    {"xform/`//"}
   ),

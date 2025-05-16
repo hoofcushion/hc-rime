@@ -70,11 +70,11 @@ M.processor={
  init=function(env)
   local config=env.engine.schema.config
   local ns=env.name_space
-  H.short_word_first=std.por(config:get_string(ns.."/short_word_first"),false)
+  H.short_word_first=rime.por(config:get_string(ns.."/short_word_first"),false)
   H.keymap={
-   toggle_key=std.por(config:get_string(ns.."/toggle"),"Shift+Control+space"),
-   escape_key=std.por(config:get_string(ns.."/escape"),"Escape"),
-   backspace_key=std.por(config:get_string(ns.."/backspace"),"BackSpace"),
+   toggle_key=rime.por(config:get_string(ns.."/toggle"),"Shift+Control+space"),
+   escape_key=rime.por(config:get_string(ns.."/escape"),"Escape"),
+   backspace_key=rime.por(config:get_string(ns.."/backspace"),"BackSpace"),
   }
   local is_code={}
   local alphabet=config:get_string("speller/alphabet")

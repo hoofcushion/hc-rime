@@ -1,7 +1,7 @@
-local utils=require("utils")
+
 local keymaps=require("hoofcushion.keymaps")
 local switchers=require("hoofcushion.switchers")
-local schema=utils.extend(
+local schema=rime.extend(
  require("hoofcushion.schema.base"),
  require("hoofcushion.speller.fixed.hoofcushion"),
  {
@@ -90,7 +90,7 @@ local schema=utils.extend(
   abc_segmentor={
    extra_tags={"english"},
   },
-  module_en=utils.extend(
+  module_en=rime.extend(
    require("hoofcushion.schema.english").translator,
    {tag="english"}
   ),
@@ -104,10 +104,10 @@ local schema=utils.extend(
   },
   engine={
    segmentors=function(self)
-    std.tbl.insert_at(self,"affix_segmentor@module_fnua_cn","matcher",1)
+    rime.tbl.insert_at(self,"affix_segmentor@module_fnua_cn","matcher",1)
    end,
    processors=function(self)
-    std.tbl.insert_at(self,"lua_processor@*reverse_pro*processor@module_fnua_cn","recognizer",1)
+    rime.tbl.insert_at(self,"lua_processor@*reverse_pro*processor@module_fnua_cn","recognizer",1)
    end,
    translators={
     "lua_translator@*ts_cn_double.fnua@module_fnua_cn",

@@ -1,4 +1,4 @@
-local utils=require("utils")
+
 local base_map={
  H={num=16,expattern="[^A-Fa-f0-9]",pattern="A-Fa-f0-9",limit="10FFFF"},
  D={num=10,expattern="[^0-9]",pattern="0-9",limit="1114111"},
@@ -25,7 +25,7 @@ local function unicode_valid(code)
  return (code<0x110000) and (code&0xfffff800~=0xd800)
 end
 --- Set default values
-local H=std.class({
+local H=rime.class({
  default="H",
  max_candidate=100,
  prefix="",

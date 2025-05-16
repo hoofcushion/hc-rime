@@ -1,6 +1,6 @@
-local utils=require("utils")
+
 ---@type rime_schema
-return utils.extend(
+return rime.extend(
  {
   engine={
    filters={
@@ -73,6 +73,7 @@ return utils.extend(
     "lua_filter@*cand-details*filter",
    },
    processors={
+    "lua_processor@*ascii-schema*processor",
     "ascii_composer",
     "recognizer",
     "key_binder",
@@ -171,7 +172,7 @@ return utils.extend(
   },
   engine={
    segmentors=function(self)
-    std.tbl.insert_at(self,"affix_segmentor@custom_symbol","matcher",1)
+    rime.tbl.insert_at(self,"affix_segmentor@custom_symbol","matcher",1)
    end,
    translators={
     "table_translator@custom_symbol",
@@ -211,7 +212,7 @@ return utils.extend(
     "lua_filter@*shape-filter*filter",
    },
    processors=function(self)
-    std.tbl.insert_at(self,"lua_processor@*shape-filter*processor","key_binder",1)
+    rime.tbl.insert_at(self,"lua_processor@*shape-filter*processor","key_binder",1)
    end,
   },
  },
