@@ -76,7 +76,7 @@ M:add(
  "bracketleft",
  function(env)
   local cand=env.engine.context:get_selected_candidate().text
-  env.engine:commit_text(rime.utf8_sub(cand,1,1))
+  env.engine:commit_text(rime.utf8.sub(cand,1,1))
   env.engine.context:clear()
   return 1
  end
@@ -97,7 +97,7 @@ M:add(
  "bracketright",
  function(env)
   local cand=env.engine.context:get_selected_candidate().text
-  env.engine:commit_text(rime.utf8_sub(cand,-1))
+  env.engine:commit_text(rime.utf8.sub(cand,-1))
   env.engine.context:clear()
   return 1
  end

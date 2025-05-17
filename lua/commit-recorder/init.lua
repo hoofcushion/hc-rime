@@ -24,7 +24,7 @@ local function bs_inrange(code)
 end
 local function is_all_han(str)
  for i=1,utf8.len(str) do
-  local char=rime.utf8_sub(str,i,i)
+  local char=rime.utf8.sub(str,i,i)
   local code=utf8.codepoint(char)
   if bs_inrange(code)==false then
    return false

@@ -306,6 +306,19 @@ rime.purify=purify(purify,{
  "table",
  {"boolean","nil"},
 })
+function rime.defer()
+ local t={}
+ local fns={}
+ function t.add(fn)
+  table.insert(fns,fn)
+ end
+ function t.run()
+  for _,v in ipairs(fns) do
+   v()
+  end
+ end
+ return t
+end
 rime.depurify=purify(depurify,{"function"})
 ---@generic base
 ---@generic new
@@ -935,26 +948,6 @@ function rime.prompt(env,str,replace)
  else
   seg.prompt=seg.prompt..str
  end
-end
----@param str string
----@param start integer
----@param final integer|nil
----@return string
-function rime.utf8_sub(str,start,final)
- local len_p=#str+1
- if final==nil then
-  local i1=start<0 and len_p or 1
-  start=utf8.offset(str,start,i1)
-  str=string.sub(str,start)
-  return str
- end
- local i1=start<0 and len_p or 1
- local i2=final<0 and len_p or 1
- final=final+1
- start,final=utf8.offset(str,start,i1),utf8.offset(str,final,i2)
- final=final-1
- str=string.sub(str,start,final)
- return str
 end
 do
  kRejected=0
