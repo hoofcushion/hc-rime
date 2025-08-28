@@ -1,6 +1,6 @@
 ---
 name: custom_symbol
-version: "0"
+version: ""
 columns:
  - code
  - text

@@ -422,10 +422,10 @@ __patch:
   'Control_c'        : {functional: false, send: 'Control+c', label: '❐'}
   'Control_v'        : {functional: false, send: 'Control+v', label: '▣'}
   'Control_y'        : {functional: false, send: 'Control+y', label: '↷'}
-  
+
   'Control_wrap'     : {functional: false, send: 'Control+Control_R', label: 'Wrap'}
-  
-  
+
+
   'delete_left'   : {functional: false, text: '{Shift+Home}{BackSpace}', label: '左清'}
 
   'group_<>'      : {functional: false, text: '<>{Left}', label: '< ↔ >'}
@@ -464,7 +464,7 @@ __patch:
   'send_b'      : {functional: false, send: 'b', label: 'B'}
   'send_n'      : {functional: false, send: 'n', label: 'N'}
   'send_m'      : {functional: false, send: 'm', label: 'M'}
-  
+
   'delimiter': {text: "'", label: '分词'}
 
   'space'         : {functional: false, label: '␣', send: 'space'}
@@ -485,13 +485,13 @@ __patch:
   'Down'          : {functional: false, label: '↓', send: 'Down', repeatable: true}
   'Left'          : {functional: false, label: '←', send: 'Left', repeatable: true}
   'Right'         : {functional: false, label: '→', send: 'Right', repeatable: true}
-  
+
   'Control_Left'  : {functional: false, send: 'Control+Left', label: '⇐'}
   'Control_Right' : {functional: false, send: 'Control+Right', label: '⇒'}
-  
+
   'Control_Home' : {functional: false, send: 'Control+Home', label: '⏮'}
   'Control_End' : {functional: false, send: 'Control+End', label: '⏭'}
-  
+
   'Control_BackSpace' : {functional: false, send: 'Control+BackSpace'}
   'Control_Delete' : {functional: false, send: 'Control+Delete'}
 
@@ -524,7 +524,7 @@ __patch:
   'plain_slash': {functional: false, text: '/', label: '/'}
   'plain_\': {functional: false, text: '\', label: '\'}
   'plain_\t': {functional: false, text: "\t", label: '⇥'}
-  
+
   'kb_number_pad': {functional: false, label: '123', send: 'Eisu_toggle', select: 'number_pad'}
   'kb_default': {functional: false, label: '‹ɪ›', send: 'Eisu_toggle', select: 'default'}
   'kb_default_simp': {functional: false, label: '␣', send: 'Eisu_toggle', select: 'default_simp'}

@@ -1,3 +1,4 @@
+--- 官方去重滤镜的改进版，能够保留注释信息
 local M={}
 local F={}
 M.filter=F

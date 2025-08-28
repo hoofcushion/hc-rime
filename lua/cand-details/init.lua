@@ -1,3 +1,4 @@
+--- 在用户词后添加 `*` 标记
 local is_user={
  user_table=true,
  user_phrase=true,

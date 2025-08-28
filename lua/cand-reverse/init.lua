@@ -1,3 +1,4 @@
+--- 文字反转滤镜
 local function utf8_reverse(str)
  local result={}
  local i=utf8.len(str) --[[@as integer]]

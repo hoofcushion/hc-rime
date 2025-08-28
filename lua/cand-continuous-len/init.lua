@@ -1,30 +1,34 @@
+--- 用于过滤重复长度的候选词，防止大量重码候选词影响输入体验。
+
 ---@type engine
 local M={}
+local H={}
 M.filter={
  init=function(env)
-  -- 0 based
-  env.limit=tonumber(env.name_space) or 6
+  H.limit=tonumber(env.name_space) or 6
  end,
- func=function(input,env)
-  local last_len,cur_len,dup_len=0,0,0
+ func=function(input)
+  local last,cur,dup_count=0,0,1
   for cand in input:iter() do
-   cur_text=cand:get_genuine().text
-   if cand.text~=cur_text then
+   local genuine_text=cand:get_genuine().text
+   --- skip for ShadowCandidate
+   if cand.text~=genuine_text then
     goto yield
    end
-   cur_len=utf8.len(cur_text) --[[@as integer]]
-   if cur_len==1 then
+   cur=utf8.len(genuine_text) --[[@as integer]]
+   --- skip for single character
+   if cur==1 then
     goto yield
    end
-   if cur_len==last_len then
-    dup_len=dup_len+1
+   if cur==last then
+    if dup_count>=H.limit then
+     goto continue
+    end
+    dup_count=dup_count+1
    else
-    dup_len=0
+    dup_count=1
    end
-   if dup_len>=env.limit then
-    goto continue
-   end
-   last_len=cur_len
+   last=cur
    ::yield::
    yield(cand)
    ::continue::

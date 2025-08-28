@@ -1,21 +1,30 @@
-local utils=require("utils")
-logdir=rime_api:get_user_data_dir().."/log.txt"
-io.open(logdir,"w"):close()
-function write(s)
- local file=io.open(logdir,"r")
- if file then
-  file:close()
-  io.open(logdir,"a"):write(s):close()
- end
-end
-function print(...)
- local e=select("#",...)
- for i=1,e do
-  write(utils.serialize(select(i,...)))
-  if i<e then write("\t") end
- end
- write("\n")
-end
+_G.std=require("std")
+-- local utils=require("utils")
+-- logdir=rime_api:get_user_data_dir().."/log.txt"
+-- io.open(logdir,"w"):close()
+-- function write(s)
+--  local file=io.open(logdir,"r")
+--  if file then
+--   file:close()
+--   io.open(logdir,"a"):write(s):close()
+--  end
+-- end
+-- function pprint(...)
+--  local e=select("#",...)
+--  for i=1,e do
+--   write(utils.serialize(select(i,...)))
+--   if i<e then write("\t") end
+--  end
+--  write("\n")
+-- end
+-- function print(...)
+--  local e=select("#",...)
+--  for i=1,e do
+--   write(tostring(select(i,...)))
+--   if i<e then write("\t") end
+--  end
+--  write("\n")
+-- end
 ---@alias engine_name
 ---| "processor"
 ---| "translator"
@@ -58,7 +67,5 @@ end
 ---@field fini fun(env)?
 ---@type table<string,lua_engine>|engine
 -- package.path      = "./lua/?.lua;" .. package.path
-module_fnua_cn    =require("translator/module_fnua_cn")
-module_fnua_triple=require("translator/module_fnua_triple")
 local luaschema   =require("luaschema")
 require("hoofcushion").setup()

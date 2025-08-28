@@ -56,7 +56,6 @@ return {
    "derive/ong$/on/",
    "derive/([tl])eng$/$1en/",
    "derive/([qwrtypsdfghjklzxcbnm])([aeio])ng$/$1ng/",
-   "xform/\"//",
   },
  },
 }

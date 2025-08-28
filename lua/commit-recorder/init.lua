@@ -84,14 +84,15 @@ local function callback(ctx)
  save(commit_text,path)
 end
 local M={}
+local H={}
 M.processor={}
 function M.processor.init(env)
- env.commit_notifier=env.engine.context.commit_notifier:connect(callback)
+ H.commit_notifier=env.engine.context.commit_notifier:connect(callback)
 end
 function M.processor.func()
  return 2
 end
-function M.processor.fini(env)
- env.commit_notifier:disconnect()
+function M.processor.fini()
+ H.commit_notifier:disconnect()
 end
 return M

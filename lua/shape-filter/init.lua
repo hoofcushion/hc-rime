@@ -1,23 +1,4 @@
---- Take a list, return a set of the elements in the list.
----@generic V:any
----@param list V[]
----@return table<V,true>
-local function set(list)
- local r={}
- for _,v in ipairs(list) do r[v]=true end
- return r
-end
-local is_code=set({
- "^","$","%",".","?","-",
- "*","+","[","]","(",")",
- "a","b","c","d","e","f","g",
- "h","i","j","k","l","m","n",
- "o","p","q","r","s","t",
- "u","v","w","x","y","z",
-})
-local is_key=set({
- "BackSpace","Escape"
-})
+local H={}
 local shape_code=require("shape-filter.code")
 local function str_to_shape(str)
  local ret={}
@@ -28,7 +9,7 @@ local function str_to_shape(str)
    table.insert(ret,shape)
   end
  end
- return table.concat(ret)
+ return {match=table.concat(ret),represent=table.concat(ret," ")}
 end
 ---@class shape_filter_status
 ---@field input string
@@ -83,41 +64,38 @@ function ShapeFilter:toggle()
   self:activate()
  end
 end
-function ShapeFilter:process_key(key)
- local keyName=key:repr()
- local char=utf8.char(key.keycode)
- if is_key[keyName] or is_code[char] then
-  if keyName=="BackSpace" then
-   if self.input~="" then
-    self:pop(1)
-   else
-    self:inactivate()
-   end
-  elseif keyName=="Escape" then
-   self:inactivate()
-  else
-   self:push(char)
-  end
-  return 1
- end
- return 2
-end
 ---@type engine
 local M={}
 M.processor={
  init=function(env)
   ShapeFilter.env=env
+  local config=env.engine.schema.config
+  local ns=env.name_space
+  H.short_word_first=std.por(config:get_string(ns.."/short_word_first"),false)
+  H.keymap={
+   toggle_key=std.por(config:get_string(ns.."/toggle"),"Shift+Control+space"),
+   escape_key=std.por(config:get_string(ns.."/escape"),"Escape"),
+   backspace_key=std.por(config:get_string(ns.."/backspace"),"BackSpace"),
+  }
+  local is_code={}
+  local alphabet=config:get_string("speller/alphabet")
+  for char in string.gmatch(alphabet,".") do
+   is_code[char]=true
+  end
+  H.is_code=is_code
   local function clear()
+   if ShapeFilter.is_active then
+    ShapeFilter:clear()
+   end
+  end
+  local function inactivate()
    if ShapeFilter.is_active then
     ShapeFilter:inactivate()
    end
   end
   local ctx=env.engine.context
   ctx.select_notifier:connect(clear)
-  ctx.commit_notifier:connect(clear)
-  local config=env.engine.schema.config
-  local ns=env.name_space
-  env.toggle_key=config:get_string(ns.."/toggle_key") or "Shift+Control+space"
+  ctx.commit_notifier:connect(inactivate)
  end,
  func=function(key,env)
   if key:release() then
@@ -128,24 +106,52 @@ M.processor={
    return 2
   end
   local keyName=key:repr()
-  if keyName==env.toggle_key then
+  if keyName==H.keymap.toggle_key then
    ShapeFilter:toggle()
    return 1
   end
   if ShapeFilter.is_active then
-   return ShapeFilter:process_key(key)
+   local char=utf8.char(key.keycode)
+   if H.is_code[char] then
+    ShapeFilter:push(char)
+    return 1
+   elseif keyName==H.keymap.backspace_key then
+    if ShapeFilter.input=="" then
+     ShapeFilter:inactivate()
+    else
+     ShapeFilter:pop(1)
+    end
+    return 1
+   elseif keyName==H.keymap.escape_key then
+    ShapeFilter:inactivate()
+    return 1
+   end
   end
   return 2
  end,
 }
+local function sort_short_word_first(a,b)
+ local al,bl=#a.text,#b.text
+ if al==bl then
+  return a.quality>b.quality
+ end
+ return al<bl
+end
 M.filter={
  func=function(translation)
   local input=ShapeFilter.input
+  local cands={}
   for cand in translation:iter() do
-   local cand_shape=str_to_shape(cand.text)
-   if string.find(cand_shape,input)~=nil then
-    yield(ShadowCandidate(cand,"","",cand_shape))
+   local shape=str_to_shape(cand.text)
+   if string.find(shape.match,input,nil,true)~=nil then
+    table.insert(cands,ShadowCandidate(cand,"","",shape.represent))
    end
+  end
+  if H.short_word_first then
+   table.sort(cands,sort_short_word_first)
+  end
+  for _,cand in ipairs(cands) do
+   yield(cand)
   end
  end,
  tags_match=function()

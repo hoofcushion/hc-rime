@@ -1,0 +1,10 @@
+---
+name: ts_cn_terra
+version: ""
+sort: by_weight
+import_tables:
+ - _dict/toned/char
+ - _dict/toned/phrase1
+ - _dict/toned/phrase2
+ - _dict/upper
+...

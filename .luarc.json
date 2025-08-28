@@ -7,14 +7,14 @@
    "lua/?.lua",
    "lua/?/init.lua",
    "luaschema/?.lua",
-   "luaschema/?/init.lua",
+   "luaschema/?/init.lua"
   ]
  },
  "diagnostics": {
   "disable": [
    "lowercase-global",
    "different-requires"
-  ],
+  ]
  },
  "format": {
   "defaultConfig": {

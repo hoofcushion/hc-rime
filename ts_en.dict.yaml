@@ -1,12 +1,12 @@
 ---
 name: ts_en
-version: "2023-07-13 23:45:08"
+version: ""
 sort: original
 import_tables:
  - rime-ice/en_dicts/en_ext
  - rime-ice/en_dicts/en
- - _dict/_dic_en/en1
- - _dict/_dic_en/en2
- - _dict/_dic_en/en3
+ - _dict/english/en1
+ - _dict/english/en2
+ - _dict/english/en3
  - _dict/upper
 ...

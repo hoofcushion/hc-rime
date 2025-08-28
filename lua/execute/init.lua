@@ -7,7 +7,7 @@ local ENV={
  print=function(...)
   local text={}
   for _,v in ipairs({...}) do
-   table.insert(text,utils.serialize(v))
+   table.insert(text,std.serialize(v))
   end
   yield(Candidate("print",0,0,table.concat(text,"	"),"print"))
  end,
@@ -23,12 +23,12 @@ M.translator={}
 function M.translator.init(env)
  local config=env.engine.schema.config
  local ns=env.name_space~="" and env.name_space or "execute"
- env.delimiter=utils.por(config:get_string(ns.."/delimiter"),"|")
- env.fin=utils.por(config:get_string(ns.."/fin"),";")
- env.greedy=utils.por(config:get_bool(ns.."/greedy"),true)
- env.prefix=utils.por(config:get_string(ns.."/prefix"),"")
- env.tag=utils.por(config:get_string(ns.."/tag"),ns)
- env.quality=utils.por(config:get_double(ns.."/initial_quality"),0)
+ env.delimiter=std.por(config:get_string(ns.."/delimiter"),"|")
+ env.fin=std.por(config:get_string(ns.."/fin"),";")
+ env.greedy=std.por(config:get_bool(ns.."/greedy"),true)
+ env.prefix=std.por(config:get_string(ns.."/prefix"),"")
+ env.tag=std.por(config:get_string(ns.."/tag"),ns)
+ env.quality=std.por(config:get_double(ns.."/initial_quality"),0)
  env.code_start=#env.prefix+1
  env.fin_p=env.fin.."$"
  function env.yield(text,comment,seg)
@@ -64,7 +64,7 @@ function M.translator.func(input,seg,env)
   env.yield(ret,"Runtime Error",seg)
   return
  end
- ret=utils.serialize(ret)
+ ret=std.serialize(ret)
  env.yield(ret,"Value",seg)
  env.yield(exp.."="..ret,"Equality",seg)
  if ret:find([[^".*"$]])~=nil then

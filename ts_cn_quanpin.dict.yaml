@@ -1,0 +1,19 @@
+---
+name: ts_cn_quanpin
+version: ""
+sort: by_weight
+import_tables:
+ # 基本词库
+ - rime-ice/cn_dicts/8105 # 字表
+ # - rime-ice/cn_dicts/41448 # 字表+
+ - _dict/quanpin/char # 字表
+ - rime-ice/cn_dicts/base # 基础词库
+ - rime-ice/cn_dicts/ext # 扩展词库
+ - rime-ice/cn_dicts/tencent # 腾讯词向量（大词库，部署时间较长）
+ - rime-ice/cn_dicts/others # 一些杂项
+ - _dict/quanpin/color # 颜色
+ - _dict/quanpin/number # 数字
+ - _dict/quanpin/pronouns # 人称代词
+ - _dict/quanpin/onmyoji-arena # 决战平安京
+ - _dict/upper
+...

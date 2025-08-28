@@ -8,3 +8,4 @@ rime-ice/*
 sync
 log.txt
 *.schema.yaml
+test.lua
