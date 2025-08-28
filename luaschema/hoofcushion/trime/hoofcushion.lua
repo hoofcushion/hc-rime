@@ -1,4 +1,4 @@
-local yaml2table={
+return {
  style={
   keyboards={".default","default","default_decimal","default_simp","number_pad"},
   auto_caps=false,

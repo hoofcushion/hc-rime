@@ -1,6 +1,5 @@
-local utils=require("utils")
 ---@type rime_schema
-return utils.extend(
+return std.extend(
  {
   engine={
    filters={

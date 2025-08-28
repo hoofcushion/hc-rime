@@ -9,3 +9,4 @@ sync
 log.txt
 *.schema.yaml
 test.lua
+default.costom.yaml

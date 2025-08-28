@@ -1,7 +1,6 @@
-local utils=require("utils")
 local keymaps=require("hoofcushion.keymaps")
 local switchers=require("hoofcushion.switchers")
-local schema=utils.extend(
+local schema=std.extend(
  require("hoofcushion.schema.base"),
  require("hoofcushion.speller.quanpin"),
  {
@@ -75,7 +74,7 @@ local schema=utils.extend(
   abc_segmentor={
    extra_tags={"english"},
   },
-  module_en=utils.extend(
+  module_en=std.extend(
    require("hoofcushion.schema.english").translator,
    {tag="english"}
   ),

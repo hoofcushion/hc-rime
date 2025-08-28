@@ -1,0 +1,42 @@
+---@meta
+---@alias engine_name
+---| "processor"
+---| "translator"
+---| "filter"
+---| "segmentor"
+---@alias lua_engine
+---| engine_processor_simp
+---| engine_processor_full
+---| engine_translator_simp
+---| engine_translator_full
+---| engine_filter_simp
+---| engine_filter_full
+---| engine_segmentor_simp
+---| engine_segmentor_full
+---@class engine
+---@field processor engine_processor_simp|engine_processor_full|nil
+---@field translator engine_translator_simp|engine_translator_full|nil
+---@field filter engine_filter_simp|engine_filter_full|nil
+---@field segmentor engine_segmentor_simp|engine_segmentor_full|nil
+---@alias engine_processor_simp fun(key,env):0|1|2
+---@class engine_processor_full
+---@field init fun(env)?
+---@field func fun(key,env):0|1|2
+---@field fini fun(env)?
+---@alias engine_translator_simp fun(input:string,seg,env)
+---@class engine_translator_full
+---@field init fun(env)?
+---@field func fun(input:string,seg,env)
+---@field fini fun(env)?
+---@alias engine_filter_simp fun(input:Translation,env)
+---@class engine_filter_full
+---@field init fun(env)?
+---@field func fun(input:Translation,env)
+---@field fini fun(env)?
+---@field tags_match (fun(seg,env):boolean)?
+---@alias engine_segmentor_simp fun(seg,env)
+---@class engine_segmentor_full
+---@field init fun(env)?
+---@field func fun(seg,env)
+---@field fini fun(env)?
+---@type table<string,lua_engine>|engine

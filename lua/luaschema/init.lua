@@ -72,7 +72,7 @@ function LuaSchema:parse()
       local name=spec.name
       local ns=name:match("@([^@]+)$")
       specs[_]=spec.name
-      info[ns]=utils.extend(info[ns],spec.option)
+      info[ns]=std.extend(info[ns],spec.option)
      end
     end
    end
@@ -90,7 +90,7 @@ function LuaSchema:parse()
  end
 end
 function LuaSchema:extend(info)
- self.info=utils.extend(self.info,info)
+ self.info=std.extend(self.info,info)
 end
 function LuaSchema:write()
  local info=self.info

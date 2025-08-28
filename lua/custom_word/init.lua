@@ -39,7 +39,7 @@ function M.translator.init(env)
  H.suffix=config:get_string(ns.."/suffix") or "-="
  H.delimiter=config:get_string(ns.."/delimiter") or "|"
  H.quality=config:get_double(ns.."/initial_quality") or 0
- H.user_dict=Utils.rime_file_exist((config:get_string(ns.."/user_dict") or "custom_word")..".txt")
+ H.user_dict=Utils.check_file((config:get_string(ns.."/user_dict") or "custom_word")..".txt")
  function H.yield(text,comment,seg)
   local cand=Candidate("custom_word",seg.start,seg._end,text,comment)
   cand.quality=H.quality

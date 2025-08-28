@@ -1,8 +1,7 @@
-local Utils=require("utils")
 local function tounicode(str)
  local result={}
  for i=1,utf8.len(str) do
-  local char=Utils.utf8_sub(str,i,i)
+  local char=std.utf8.sub(str,i,i)
   local code=string.format("0x%x",utf8.codepoint(char))
   table.insert(result,code)
  end

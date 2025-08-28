@@ -104,7 +104,7 @@ local mappings={
   rhs=function(env)
    local Utils=require("utils")
    local cand=env.engine.context:get_selected_candidate().text
-   env.engine:commit_text(Utils.utf8_sub(cand,1,1))
+   env.engine:commit_text(std.utf8.sub(cand,1,1))
    env.engine.context:clear()
    return 1
   end,
@@ -126,7 +126,7 @@ local mappings={
   rhs=function(env)
    local Utils=require("utils")
    local cand=env.engine.context:get_selected_candidate().text
-   env.engine:commit_text(Utils.utf8_sub(cand,-1))
+   env.engine:commit_text(std.utf8.sub(cand,-1))
    env.engine.context:clear()
    return 1
   end,
