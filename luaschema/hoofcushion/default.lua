@@ -12,7 +12,7 @@ return {
   },
   switcher={
    abbreviate_options=true,
-   caption="〔方案选单〕",
+   caption="方案选单",
    fold_options=true,
    hotkeys={
     "Control+grave",
@@ -25,7 +25,7 @@ return {
     "filter_emoji",
     "filter_symbol",
    },
-   option_list_separator="／",
+   option_list_separator="/",
   },
  },
 }

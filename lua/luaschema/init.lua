@@ -1,8 +1,8 @@
 ---@diagnostic disable: unused-local, unused-function
 local utils=require("utils")
 local json=require("luaschema.json")
-package.path=std.fs.path_connect(utils.rime_path.user,"luaschema","?.lua")..";"..package.path
-package.path=std.fs.path_connect(utils.rime_path.user,"luaschema","?","init.lua")..";"..package.path
+package.path=std.fs.path_connect(rime_api:get_user_data_dir(),"luaschema","?.lua")..";"..package.path
+package.path=std.fs.path_connect(rime_api:get_user_data_dir(),"luaschema","?","init.lua")..";"..package.path
 --- the pototype of rime schema file
 local LuaSchema={}
 function LuaSchema:new(info)
@@ -95,7 +95,7 @@ end
 function LuaSchema:write()
  local info=self.info
  local path=std.fs.path_connect(
-  utils.rime_path.user,
+  rime_api:get_user_data_dir(),
   ("%s.%s.yaml"):format(self.name,self.type)
  )
  std.io.open(path,"w")

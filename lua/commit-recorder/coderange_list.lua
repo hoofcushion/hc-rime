@@ -1,4 +1,4 @@
-return {
+local M={
  minimum=11904,
  maximum=205743,
  {11904, 12031},
@@ -18,26 +18,36 @@ return {
  {194560,195103},
  {196608,201551},
  {201552,205743},
- is_chinese=function(self,code)
-  if code<=self.minimum
-  or code>=self.maximum then
-   return false
-  end
-  local left,right=1,#self
-  while left<=right do
-   local mid=(left+right)//2
-   local range=self[mid]
-   local min=range[1]
-   local max=range[2]
-   if code>=min and code<=max then
-    return true
-   end
-   if code<min then
-    right=mid-1
-   elseif code>max then
-    left=mid+1
-   end
-  end
+}
+local function is_chinese(code)
+ if code<=M.minimum
+ or code>=M.maximum then
   return false
  end
-}
+ local left,right=1,#M
+ while left<=right do
+  local mid=(left+right)//2
+  local range=M[mid]
+  local min=range[1]
+  local max=range[2]
+  if code>=min and code<=max then
+   return true
+  end
+  if code<min then
+   right=mid-1
+  elseif code>max then
+   left=mid+1
+  end
+ end
+ return false
+end
+local cache={}
+function M.is_chinese(code)
+ local ret=cache[code]
+ if ret==nil then
+  ret=is_chinese(code)
+  cache[code]=ret
+ end
+ return ret
+end
+return M

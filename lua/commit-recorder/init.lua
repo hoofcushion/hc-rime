@@ -1,32 +1,10 @@
 local Utils=require("utils")
 local coderange=require("commit-recorder.coderange_list")
-local function bs_inrange(code)
- if code<=coderange.minimum
- or code>=coderange.maximum then
-  return false
- end
- local left,right=1,#coderange
- while left<=right do
-  local mid=(left+right)//2
-  local range=coderange[mid]
-  local min=range[1]
-  local max=range[2]
-  if code>=min and code<=max then
-   return true
-  end
-  if code<min then
-   right=mid-1
-  elseif code>max then
-   left=mid+1
-  end
- end
- return false
-end
 local function is_all_han(str)
  for i=1,utf8.len(str) do
   local char=std.utf8.sub(str,i,i)
   local code=utf8.codepoint(char)
-  if bs_inrange(code)==false then
+  if coderange.is_chinese(code)==false then
    return false
   end
  end

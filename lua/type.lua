@@ -18,25 +18,25 @@
 ---@field translator engine_translator_simp|engine_translator_full|nil
 ---@field filter engine_filter_simp|engine_filter_full|nil
 ---@field segmentor engine_segmentor_simp|engine_segmentor_full|nil
----@alias engine_processor_simp fun(key,env):0|1|2
+---@alias engine_processor_simp fun(key:KeyEvent,env):0|1|2
 ---@class engine_processor_full
 ---@field init fun(env)?
----@field func fun(key,env):0|1|2
+---@field func engine_processor_simp
 ---@field fini fun(env)?
 ---@alias engine_translator_simp fun(input:string,seg,env)
 ---@class engine_translator_full
 ---@field init fun(env)?
----@field func fun(input:string,seg,env)
+---@field func engine_translator_simp
 ---@field fini fun(env)?
 ---@alias engine_filter_simp fun(input:Translation,env)
 ---@class engine_filter_full
 ---@field init fun(env)?
----@field func fun(input:Translation,env)
+---@field func engine_filter_simp
 ---@field fini fun(env)?
 ---@field tags_match (fun(seg,env):boolean)?
----@alias engine_segmentor_simp fun(seg,env)
+---@alias engine_segmentor_simp fun(seg:Segmentation,env)
 ---@class engine_segmentor_full
 ---@field init fun(env)?
----@field func fun(seg,env)
+---@field func engine_segmentor_simp
 ---@field fini fun(env)?
 ---@type table<string,lua_engine>|engine

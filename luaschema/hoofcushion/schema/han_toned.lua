@@ -16,7 +16,9 @@ local schema=std.extend(
   engine={
    translators={
     "lua_translator@*ts_fixed*translator@translator",
-    "lua_translator@*user-dict-blocker*length@1",
+   },
+   filters={
+    "lua_filter@*cand-block-char-ud*filter",
    },
   },
   translator={

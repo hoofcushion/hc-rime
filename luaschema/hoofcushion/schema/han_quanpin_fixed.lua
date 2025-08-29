@@ -15,7 +15,9 @@ local schema=std.extend(
   engine={
    translators={
     "lua_translator@*ts_fixed*translator@translator",
-    "lua_translator@*user-dict-blocker*length@1",
+   },
+   filters={
+    "lua_filter@*cand-block-char-ud*filter",
    },
   },
   translator={
@@ -95,7 +97,7 @@ local schema=std.extend(
   module_cn_en_fixed={
    initial_quality=1,
    dictionary="module_cn_en_quanpin",
-   prism="module_cn_en_fixed"
+   prism="module_cn_en_fixed",
   },
  },
  --- Reverse lookup
