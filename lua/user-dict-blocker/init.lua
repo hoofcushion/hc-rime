@@ -7,8 +7,12 @@ M.processor={
  ---@param env Env
  init=function(env)
   local len=tonumber(env.name_space)
-  assert(len~=nil and len>0,"Invalid length of"..tostring(len))
+  len=len or 1
   local mem=Memory(env.engine,env.engine.schema)
+  mem:user_lookup("",true)
+  for entry in mem:iter_user() do
+   mem:update_userdict(entry,-1,"")
+  end
   H.notifier=env.engine.context.commit_notifier:connect(function(ctx)
    local commit_text=ctx:get_commit_text()
    -- 限制长度符合要求
