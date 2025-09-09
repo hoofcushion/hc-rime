@@ -2,6 +2,7 @@ local keymaps=require("hoofcushion.keymaps")
 local switchers=require("hoofcushion.switchers")
 local schema=std.extend(
  require("hoofcushion.schema.base"),
+ require("hoofcushion.schema.hans"),
  require("hoofcushion.speller.fixed.hoofcushion"),
  {
   schema={
@@ -96,7 +97,7 @@ local schema=std.extend(
   },
   module_cn_en_fixed={
    initial_quality=1,
-   dictionary="module_cn_en_quanpin",
+   dictionary="module_cn_en",
    prism="module_cn_en_fixed",
   },
  },

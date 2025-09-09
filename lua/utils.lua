@@ -23,8 +23,18 @@ local rime_paths={
  rime_api:get_shared_data_dir(),
 }
 ---@return string
-function M.check_file(filename)
+function M.check_file(filename,create)
  local path=find_file_in_paths(filename,rime_paths)
+ if create and not path then
+  local user_dir=rime_paths[1]
+  local file=io.open(user_dir.."/"..filename,"w")
+  if file then
+   file:close()
+   path=user_dir.."/"..filename
+  else
+   error("Could not create file: "..filename)
+  end
+ end
  if not path then
   error("Could not find file: "..filename)
  end

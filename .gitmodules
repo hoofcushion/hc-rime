@@ -1,3 +1,7 @@
 [submodule "rime-ice"]
 	path = rime-ice
 	url = https://github.com/iDvel/rime-ice
+[submodule "rime-octagram-data"]
+	path = rime-octagram-data
+	url = https://github.com/lotem/rime-octagram-data
+	branch = hans

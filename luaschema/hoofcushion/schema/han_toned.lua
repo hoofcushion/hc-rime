@@ -2,6 +2,7 @@ local keymaps=require("hoofcushion.keymaps")
 local switchers=require("hoofcushion.switchers")
 local schema=std.extend(
  require("hoofcushion.schema.base"),
+ require("hoofcushion.schema.hans"),
  require("hoofcushion.speller.fixed.triple"),
  {
   schema={

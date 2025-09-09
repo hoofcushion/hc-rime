@@ -43,9 +43,9 @@ local function save(str,path)
  file:close()
 end
 local PATHS={
- char=Utils.check_file("recorder/char.txt"),
- word=Utils.check_file("recorder/word.txt"),
- other=Utils.check_file("recorder/other.txt"),
+ char=Utils.check_file("recorder/char.txt",true),
+ word=Utils.check_file("recorder/word.txt",true),
+ other=Utils.check_file("recorder/other.txt",true),
 }
 local function callback(ctx)
  local commit_text=ctx:get_commit_text()
