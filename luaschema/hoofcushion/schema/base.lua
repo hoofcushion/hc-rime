@@ -6,7 +6,7 @@ return std.extend(
     {
      name="simplifier@filter_simplification",
      option={
-      option_name="filter_simplification",
+      option_name="simplification",
       tags={"abc"},
      },
     },

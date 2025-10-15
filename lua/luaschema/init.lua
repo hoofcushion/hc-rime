@@ -13,6 +13,9 @@ function LuaSchema:new(info)
  elseif info.patch~=nil then
   new.type="custom"
   new.name=info.target
+ elseif info.trime~=nil then
+  new.type="trime"
+  new.name=info.trime
  else
   new.type="dict"
   new.name=info.name

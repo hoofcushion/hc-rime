@@ -1,4 +1,5 @@
 local specs={
+ require("hoofcushion.trime.hoofcushion"),
  require("hoofcushion.subschema.cn_en_fixed"),
  require("hoofcushion.subschema.cn_en_quanpin"),
  require("hoofcushion.subschema.custom_phrase"),

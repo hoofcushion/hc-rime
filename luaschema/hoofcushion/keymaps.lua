@@ -7,7 +7,7 @@ return {
  end,
  ascii_punct          ={accept="Control+comma",toggle="ascii_punct",when="always"},
  full_shape           ={accept="Control+period",toggle="full_shape",when="always"},
- filter_simplification={accept="Shift+Control+"..shift[1],toggle="filter_simplification",when="always"},
+ filter_simplification={accept="Shift+Control+"..shift[1],toggle="simplification",when="always"},
  filter_emoji         ={accept="Shift+Control+"..shift[2],toggle="filter_emoji",when="always"},
  filter_symbol        ={accept="Shift+Control+"..shift[3],toggle="filter_symbol",when="always"},
  filter_zhuyin        ={accept="Shift+Control+"..shift[4],toggle="filter_zhuyin",when="always"},
