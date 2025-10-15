@@ -1,15 +1,13 @@
 -- 简体拼音输入方案共享配置
 return {
  engine={
-  -- processors=function(self)
-  --  table.insert(
-  --   self,
-  --   1,
-  --   "lua_processor@*user-dict-blocker*processor"
-  --  )
-  -- end,
   filters={
-   "lua_filter@*cand-block-char-ud*filter",
+   {
+    name="lua_filter@*cand-decensor*filter",
+    option={
+     option_name="filter_decensor",
+    },
+   },
   },
  },
  grammar={

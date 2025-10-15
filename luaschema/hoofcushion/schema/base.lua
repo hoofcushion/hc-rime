@@ -49,15 +49,6 @@ return std.extend(
      },
     },
     {
-     name="simplifier@filter_huoxin",
-     option={
-      opencc_config="huoxing.json",
-      option_name="filter_huoxin",
-      tags={"abc"},
-      tips="all",
-     },
-    },
-    {
      name="simplifier@filter_trans",
      option={
       opencc_config="dic_4w_en.json",
