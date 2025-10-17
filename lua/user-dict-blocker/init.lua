@@ -11,7 +11,9 @@ M.processor={
   local mem=Memory(env.engine,env.engine.schema)
   mem:user_lookup("",true)
   for entry in mem:iter_user() do
-   mem:update_userdict(entry,-1,"")
+   if utf8.len(entry.text)==len then
+    mem:update_userdict(entry,-1,"")
+   end
   end
   H.notifier=env.engine.context.commit_notifier:connect(function(ctx)
    local commit_text=ctx:get_commit_text()

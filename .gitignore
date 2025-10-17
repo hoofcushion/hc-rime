@@ -8,5 +8,6 @@ rime-ice/*
 sync
 log.txt
 *.schema.yaml
+*.trime.yaml
 test.lua
 default.costom.yaml

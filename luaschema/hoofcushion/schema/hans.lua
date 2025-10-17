@@ -1,6 +1,9 @@
 -- 简体拼音输入方案共享配置
 return {
  engine={
+  processors=function(t)
+   table.insert(t,1,"lua_processor@*user-dict-blocker*processor")
+  end,
   filters={
    {
     name="lua_filter@*cand-decensor*filter",
