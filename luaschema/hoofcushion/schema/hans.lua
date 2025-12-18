@@ -2,13 +2,17 @@
 return {
  engine={
   processors=function(t)
-   table.insert(t,1,"lua_processor@*user-dict-blocker*processor")
+   table.insert(t,1,{
+    name="lua_processor",
+    module=require("user-dict-blocker").processor,
+   })
   end,
   filters={
    {
-    name="lua_filter@*cand-decensor*filter",
+    name="lua_filter@"..NS.decensor,
+    module=require("cand-decensor").filter,
     option={
-     option_name="filter_decensor",
+     option_name=NS.filter_decensor,
     },
    },
   },

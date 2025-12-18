@@ -1,8 +1,8 @@
 return {
  schema={
-  schema_id="custom_phrase",
+  schema_id=NS.custom_phrase,
  },
  translator={
-  dictionary="custom_phrase",
+  dictionary=NS.custom_phrase,
  },
 }

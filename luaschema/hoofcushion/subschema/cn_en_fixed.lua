@@ -1,10 +1,10 @@
 return {
  schema={
-  schema_id="module_cn_en_fixed",
+  schema_id=NS.module_cn_en_fixed,
  },
  translator={
-  dictionary="module_cn_en",
-  prism="module_cn_en_fixed",
+  dictionary=NS.module_cn_en,
+  prism=NS.module_cn_en_fixed,
  },
  speller={
   algebra=std.extend(

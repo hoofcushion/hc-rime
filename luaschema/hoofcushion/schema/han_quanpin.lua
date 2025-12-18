@@ -6,7 +6,7 @@ local schema=std.extend(
  require("hoofcushion.speller.quanpin"),
  {
   schema={
-   schema_id="ts_cn_quanpin",
+   schema_id=NS.ts_cn_quanpin,
    name="全拼",
    description=[[
 汉语输入方案之全拼
@@ -15,14 +15,17 @@ local schema=std.extend(
   },
   engine={
    translators={
-    "lua_translator@*ts_cn_quanpin*translator@translator",
+    {
+     name="lua_translator@translator",
+     module=require("ts_cn_quanpin").translator,
+     option={
+      initial_quality=1,
+      dictionary=NS.ts_cn_quanpin,
+      user_dict=NS.ts_cn_quanpin,
+      prism=NS.ts_cn_quanpin,
+     },
+    },
    },
-  },
-  translator={
-   initial_quality=1,
-   dictionary="ts_cn_quanpin",
-   user_dict="ts_cn_quanpin",
-   prism="ts_cn_quanpin",
   },
  },
  {
@@ -63,21 +66,24 @@ local schema=std.extend(
  {
   schema={
    dependencies={
-    "ts_en",
+    NS.ts_en,
    },
   },
   engine={
    translators={
-    "lua_translator@*ts_en*translator@module_en",
+    {
+     name="lua_translator@module_en",
+     module=require("ts_en").translator,
+     option=std.extend(
+      LuaSchema.new(require("hoofcushion.schema.english")).info.translator,
+      {tag="english"}
+     ),
+    },
    },
   },
   abc_segmentor={
    extra_tags={"english"},
   },
-  module_en=std.extend(
-   require("hoofcushion.schema.english").translator,
-   {tag="english"}
-  ),
  },
  --- Cn-En mixed
  {
@@ -88,12 +94,14 @@ local schema=std.extend(
   },
   engine={
    translators={
-    "script_translator@module_cn_en_quanpin",
+    {
+     name="script_translator@module_cn_en_quanpin",
+     option={
+      initial_quality=1,
+      dictionary="module_cn_en",
+     },
+    },
    },
-  },
-  module_cn_en_quanpin={
-   initial_quality=1,
-   dictionary="module_cn_en",
   },
  }
 )

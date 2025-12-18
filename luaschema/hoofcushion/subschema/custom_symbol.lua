@@ -1,8 +1,8 @@
 return {
  schema={
-  schema_id="custom_symbol",
+  schema_id=NS.custom_symbol,
  },
  translator={
-  dictionary="custom_symbol",
+  dictionary=NS.custom_symbol,
  },
 }

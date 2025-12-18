@@ -4,7 +4,7 @@ local schema=std.extend(
  require("hoofcushion.schema.base"),
  {
   schema={
-   schema_id="ts_en",
+   schema_id=NS.ts_en,
    name="英语",
    description=[[
 英语输入方案
@@ -13,17 +13,20 @@ local schema=std.extend(
   },
   engine={
    translators={
-    "lua_translator@*ts_en*translator@translator",
+    {
+     name="lua_translator@translator",
+     module=require("ts_en").translator,
+     option={
+      initial_quality=1,
+      dictionary=NS.ts_en,
+      enable_user_dict=true,
+      user_dict=NS.custom_word,
+      db_class="stabledb",
+      enable_sentence=false,
+      comment_format={"xform/^.*$//"},
+     },
+    },
    },
-  },
-  translator={
-   initial_quality=1,
-   dictionary="ts_en",
-   enable_user_dict=true,
-   user_dict="custom_word",
-   db_class="stabledb",
-   enable_sentence=false,
-   comment_format={"xform/^.*$//"},
   },
   speller={
    alphabet="zyxwvutsrqponmlkjihgfedcba;ZYXWVUTSRQPONMLKJIHGFEDCBA-=|",

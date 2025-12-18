@@ -1,45 +1,37 @@
 ---@diagnostic disable: unused-local, unused-function
+std=require("std")
+NS=setmetatable({},{__index=function(_,k) return k end})
+NS2=setmetatable({},{__index=function(_,k) return NS end})
 local utils=require("utils")
 local json=require("luaschema.json")
 package.path=std.fs.path_connect(rime_api:get_user_data_dir(),"luaschema","?.lua")..";"..package.path
 package.path=std.fs.path_connect(rime_api:get_user_data_dir(),"luaschema","?","init.lua")..";"..package.path
 --- the pototype of rime schema file
-local LuaSchema={}
-function LuaSchema:new(info)
- local new=setmetatable({info=info},{__index=self})
+LuaSchema={}
+local cache={}
+function LuaSchema.new(info)
+ local lua_schema=cache[info]
+ if lua_schema then
+  return lua_schema
+ end
+ cache[info]=lua_schema
+ lua_schema=setmetatable({},{__index=LuaSchema})
+ lua_schema.info=info
  if info.schema~=nil then
-  new.type="schema"
-  new.name=info.schema.schema_id
+  lua_schema.type="schema"
+  lua_schema.name=info.schema.schema_id
  elseif info.patch~=nil then
-  new.type="custom"
-  new.name=info.target
+  lua_schema.type="custom"
+  lua_schema.name=info.target
  elseif info.trime~=nil then
-  new.type="trime"
-  new.name=info.trime
+  lua_schema.type="trime"
+  lua_schema.name=info.trime
  else
-  new.type="dict"
-  new.name=info.name
+  lua_schema.type="dict"
+  lua_schema.name=info.name
  end
- new:parse()
- return new
-end
---- ---
---- New algebra formula: xform_unique/from/to/
---- ---
-local function parse_algebra(algebra)
- if type(algebra)~="table" then return end
- ---@cast algebra table
- for i,formula in ipairs(algebra) do
-  local parts=std.str.split(formula,"/")
-  local type,from,to=parts[1],parts[2],parts[3] or ""
-  if type=="xform_unique" then
-   type="xform"
-   to="�"..table.concat(std.str.tolist(to),"�").."�"
-  end
-  algebra[i]=("%s/%s/%s/"):format(type,from,to)
- end
- table.insert(algebra,"xform/�//")
- return algebra
+ lua_schema:parse()
+ return lua_schema
 end
 function LuaSchema:get_namespaces(engine_type)
  local info=self.info
@@ -60,29 +52,49 @@ function LuaSchema:get_options(namespaces)
   return std.tbl.get(self.info,v)
  end)
 end
-function LuaSchema:parse()
- local info=self.info
- local schema_type=self.type
- if schema_type=="schema" then
-  --- ---
-  --- Parse schema nested engine options
-  --- ---
+local parse_rules={
+ function(self,info)
   local engines=std.tbl.get(info,"engine")
-  if type(engines)=="table" then
-   for _,specs in pairs(engines) do
-    for _,spec in ipairs(specs) do
-     if type(spec)=="table" then
-      local name=spec.name
-      local ns=name:match("@([^@]+)$")
-      specs[_]=spec.name
-      info[ns]=std.extend(info[ns],spec.option)
+  if type(engines)~="table" then
+   return
+  end
+  for _,sublist in pairs(engines) do
+   for index,spec in ipairs(sublist) do
+    if type(spec)=="table" then
+     local name=spec.name
+     sublist[index]=name
+     local namespace=name:match("@([^@]+)$") or ""
+     if spec.option then
+      info[namespace]=std.extend(info[namespace],spec.option)
+     end
+     local module=spec.module
+     if module then
+      local id=("%p"):format(module)
+      _G[id]=module
+      local prefix=name:match("^([^@]+)")
+      local module_name=prefix.."@"..id.."@"..namespace
+      sublist[index]=module_name
      end
     end
    end
   end
-  --- ---
-  --- Parse custom algebra syntax
-  --- ---
+ end,
+ function(self,info)
+  ---@param algebra table|nil
+  local function parse_algebra(algebra)
+   if type(algebra)~="table" then return end
+   for i,formula in ipairs(algebra) do
+    local parts=std.str.split(formula,"/")
+    local type,from,to=parts[1],parts[2],parts[3] or ""
+    if type=="xform_unique" then
+     type="xform"
+     to="�"..table.concat(std.str.tolist(to),"�").."�"
+    end
+    algebra[i]=("%s/%s/%s/"):format(type,from,to)
+   end
+   table.insert(algebra,"xform/�//")
+   return algebra
+  end
   parse_algebra(std.tbl.get(info,"speller","algebra"))
   local namespaces=self:get_namespaces("translators")
   local translators=self:get_options(namespaces)
@@ -90,10 +102,16 @@ function LuaSchema:parse()
    parse_algebra(std.tbl.get(translator,"comment_format"))
    parse_algebra(std.tbl.get(translator,"preedit_format"))
   end
+ end,
+}
+function LuaSchema:parse()
+ local info=self.info
+ local schema_type=self.type
+ if schema_type=="schema" then
+  for _,rule in pairs(parse_rules) do
+   rule(self,info)
+  end
  end
-end
-function LuaSchema:extend(info)
- self.info=std.extend(self.info,info)
 end
 function LuaSchema:write()
  local info=self.info
@@ -106,11 +124,6 @@ function LuaSchema:write()
   :close()
 end
 function LuaSchema.load(tbl)
- LuaSchema:new(tbl):write()
-end
-function LuaSchema.loadlist(list)
- for _,v in ipairs(list) do
-  LuaSchema.load(require(v))
- end
+ LuaSchema.new(tbl):write()
 end
 return LuaSchema

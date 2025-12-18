@@ -4,76 +4,97 @@ return std.extend(
   engine={
    filters={
     {
-     name="simplifier@filter_simplification",
+     name="simplifier@"..NS.filter_simplification,
      option={
-      option_name="simplification",
+      option_name=NS.simplification,
       tags={"abc"},
      },
     },
     {
-     name="simplifier@filter_emoji",
+     name="simplifier@"..NS.filter_emoji,
      option={
       opencc_config="emoji.json",
-      option_name="filter_emoji",
+      option_name=NS.filter_emoji,
       tags={"abc"},
       tips="all",
      },
     },
     {
-     name="simplifier@filter_users",
+     name="simplifier@"..NS.filter_users,
      options={
       opencc_config="users.json",
-      option_name="filter_emoji",
+      option_name=NS.filter_emoji,
       tags={"abc"},
       tips="all",
      },
     },
     {
-     name="simplifier@filter_symbol",
+     name="simplifier@"..NS.filter_symbol,
      option={
       opencc_config="sym.json",
-      option_name="filter_symbol",
+      option_name=NS.filter_symbol,
       tags={"abc"},
       tips="all",
      },
     },
     {
-     name="simplifier@filter_zhuyin",
+     name="simplifier@"..NS.filter_zhuyin,
      option={
       comment_format={"xform/&nbsp/｜/"},
       opencc_config="pinyin.json",
-      option_name="filter_zhuyin",
+      option_name=NS.filter_zhuyin,
       show_in_comment=true,
       tags={"abc"},
       tips="all",
      },
     },
     {
-     name="simplifier@filter_trans",
+     name="simplifier@"..NS.filter_trans,
      option={
       opencc_config="dic_4w_en.json",
-      option_name="filter_trans",
+      option_name=NS.filter_trans,
       tags={"english"},
       tips="all",
      },
     },
-    "lua_filter@*cand-continuous-len*filter",
-    "lua_filter@*cand-limit*filter@100",
-    "lua_filter@*uniquifier*filter",
-    "lua_filter@*cand-details*filter",
+    {
+     name="lua_filter",
+     module=require("cand-continuous-len").filter,
+    },
+    {
+     name="lua_filter@100",
+     module=require("cand-limit").filter,
+    },
+    {
+     name="lua_filter",
+     module=require("uniquifier").filter,
+    },
+    {
+     name="lua_filter",
+     module=require("cand-details").filter,
+    },
    },
    processors={
     "ascii_composer",
     "recognizer",
     "key_binder",
-    "lua_processor@*keymap*processor",
-    "lua_processor@*quick_warp*processor",
+    {
+     name="lua_processor",
+     module=require("keymap").processor,
+    },
+    {
+     name="lua_processor",
+     module=require("quick_warp").processor,
+    },
     "speller",
     "punctuator",
     "selector",
     "navigator",
     "express_editor",
-    "lua_processor@*commit-recorder*processor@recorder",
+    {
+     name="lua_processor@"..NS.recorder,
+     module=require("commit-recorder").processor,
+    },
    },
    segmentors={
     "ascii_segmentor",
@@ -84,15 +105,21 @@ return std.extend(
    },
    translators={
     "punct_translator",
-    "lua_translator@*custom_word*translator@custom_word",
-    "lua_translator@*custom_time*translator@custom_time",
+    {
+     name="lua_translator@"..NS.custom_word,
+     module=require("custom_word").translator,
+     option={
+      delimiter="|",
+      initial_quality=2,
+      suffix="-=",
+      user_dict=NS.custom_word,
+     },
+    },
+    {
+     name="lua_translator@"..NS.custom_time,
+     module=require("custom_time").translator,
+    },
    },
-  },
-  custom_word={
-   delimiter="|",
-   initial_quality=2,
-   suffix="-=",
-   user_dict="custom_word",
   },
   key_binder={
    bindings={
@@ -134,21 +161,23 @@ return std.extend(
  },
  --- Custom Phrase
  {
-  custom_phrase={
-   dictionary="custom_phrase",
-   enable_completion=false,
-   enable_sentence=false,
-   enable_user_dict=false,
-   initial_quality=64,
-  },
   engine={
    translators={
-    "table_translator@custom_phrase",
+    {
+     name="table_translator@"..NS.custom_phrase,
+     option={
+      dictionary=NS.custom_phrase,
+      enable_completion=false,
+      enable_sentence=false,
+      enable_user_dict=false,
+      initial_quality=64,
+     },
+    },
    },
   },
   schema={
    dependencies={
-    "custom_phrase",
+    NS.custom_phrase,
    },
   },
  },
@@ -156,27 +185,29 @@ return std.extend(
  {
   schema={
    dependencies={
-    "custom_symbol",
+    NS.custom_symbol,
    },
   },
   engine={
    segmentors=function(self)
-    std.tbl.insert_at(self,"affix_segmentor@custom_symbol","matcher",1)
+    std.tbl.insert_at(self,"affix_segmentor@"..NS.custom_symbol,"matcher",1)
    end,
    translators={
-    "table_translator@custom_symbol",
+    {
+     name="table_translator@"..NS.custom_symbol,
+     option={
+      initial_quality=64,
+      prefix="\\",
+      tips="[Symbol]",
+      dictionary=NS.custom_symbol,
+      tag=NS.custom_symbol,
+     },
+    },
    },
-  },
-  custom_symbol={
-   initial_quality=64,
-   prefix="\\",
-   tips="[Symbol]",
-   dictionary="custom_symbol",
-   tag="custom_symbol",
   },
   recognizer={
    patterns={
-    custom_symbol=[[^\\(?:10?|[0-9]|[A-Za-z]+)?]],
+    [NS.custom_symbol]=[[^\\(?:10?|[0-9]|[A-Za-z]+)?]],
    },
   },
  },
@@ -184,21 +215,30 @@ return std.extend(
  {
   engine={
    filters={
-    "lua_filter@*cand-reverse*filter@filter_Reverse",
-    "lua_filter@*cand-unicode*filter@filter_Unicode",
+    {
+     name="lua_filter@"..NS.filter_Reverse,
+     module=require("cand-reverse").filter,
+     option={
+      option_name=NS.filter_Reverse,
+     },
+    },
+    {
+     name="lua_filter@"..NS.filter_Unicode,
+     module=require("cand-unicode").filter,
+     option={
+      option_name=NS.filter_Unicode,
+     },
+    },
    },
-  },
-  filter_Reverse={
-   option_name="filter_Reverse",
-  },
-  filter_Unicode={
-   option_name="filter_Unicode",
   },
  },
  {
   engine={
    filters={
-    "lua_filter@*shape-filter*filter",
+    {
+     name="lua_filter",
+     module=require("shape-filter").filter,
+    },
    },
    processors=function(self)
     std.tbl.insert_at(self,"lua_processor@*shape-filter*processor","key_binder",1)
@@ -206,9 +246,22 @@ return std.extend(
   },
  },
  {
-  execute={initial_quality=64,prefix="//",tag="execute"},
-  recognizer={patterns={execute="^//.*"}},
-  engine={translators={"lua_translator@*execute*translator@execute"}},
+  engine={
+   translators={
+    {
+     name="lua_translator@"..NS.execute,
+     module=require("execute").translator,
+     option={
+      initial_quality=64,
+      prefix="//",
+      tag="execute",
+     },
+    },
+   },
+  },
+  recognizer={
+   patterns={execute="^//.*"},
+  },
   key_binder={
    bindings={
     {accept="KP_1",       send="1",       when="composing"},
@@ -230,13 +283,43 @@ return std.extend(
   },
  },
  {
-  chinese_number={initial_quality=64,prefix="/J",tag="chinese_number"},
-  recognizer={patterns={chinese_number="^/J.*"}},
-  engine={translators={"lua_translator@*chinese_number*translator@chinese_number"}},
+  engine={
+   translators={
+    {
+     name="lua_translator@"..NS.chinese_number,
+     module=require("chinese_number").translator,
+     option={
+      initial_quality=64,
+      prefix="/J",
+      tag=NS.chinese_number,
+     },
+    },
+   },
+  },
+  recognizer={
+   patterns={
+    [NS.chinese_number]="^/J.*",
+   },
+  },
  },
  {
-  unicode={initial_quality=64,prefix="U",tag="unicode"},
-  recognizer={patterns={unicode="^U(?:[HDOB]?[a-f0-9]*|[a-f0-9]*[HDOB]?)$"}},
-  engine={translators={"lua_translator@*unicode*translator@unicode"}},
+  engine={
+   translators={
+    {
+     name="lua_translator@"..NS.unicode,
+     module=require("unicode").translator,
+     option={
+      initial_quality=64,
+      prefix="U",
+      tag=NS.unicode,
+     },
+    },
+   },
+  },
+  recognizer={
+   patterns={
+    [NS.unicode]="^U(?:[HDOB]?[a-f0-9]*|[a-f0-9]*[HDOB]?)$",
+   },
+  },
  }
 )

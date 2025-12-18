@@ -394,17 +394,6 @@ std.utf8.split=function(str,sep)
  table.insert(ret,word)
  return ret
 end
--- Class system
----@generic Base, New
----@param base? Base
----@param new? New
----@return Base|New
-std.class=function(base,new)
- if base==nil then return {} end
- if new==nil then new={} end
- setmetatable(new,{__index=base})
- return new
-end
 -- Metatable utilities
 std.mt=setmetatable({},{
  __index=function(t,k)

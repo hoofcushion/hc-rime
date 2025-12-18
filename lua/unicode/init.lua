@@ -25,13 +25,15 @@ local function unicode_valid(code)
  return (code<0x110000) and (code&0xfffff800~=0xd800)
 end
 --- Set default values
-local H=std.class({
- default="H",
- max_candidate=100,
- prefix="",
- quality=0,
- tag="unicode",
- code_start=0,
+local H=setmetatable({},{
+ __index={
+  default="H",
+  max_candidate=100,
+  prefix="",
+  quality=0,
+  tag="unicode",
+  code_start=0,
+ }
 })
 local M={}
 M.translator={}

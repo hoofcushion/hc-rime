@@ -16,15 +16,18 @@ local schema=std.extend(
   },
   engine={
    translators={
-    "lua_translator@*ts_fixed*translator@translator",
+    {
+     name="lua_translator@translator",
+     module=require("ts_fixed").translator,
+     option={
+      initial_quality=1,
+      dictionary="ts_cn_terra",
+      prism="ts_cn_triple",
+      user_dict="ts_cn_triple",
+      syllable_len=3,
+     },
+    },
    },
-  },
-  translator={
-   initial_quality=1,
-   dictionary="ts_cn_terra",
-   prism="ts_cn_triple",
-   user_dict="ts_cn_triple",
-   syllable_len=3,
   },
  },
  {
@@ -70,16 +73,19 @@ local schema=std.extend(
   },
   engine={
    translators={
-    "lua_translator@*ts_en*translator@module_en",
+    {
+     name="lua_translator@module_en",
+     module=require("ts_en").translator,
+     option=std.extend(
+      LuaSchema.new(require("hoofcushion.schema.english")).info.translator,
+      {tag="english"}
+     ),
+    },
    },
   },
   abc_segmentor={
    extra_tags={"english"},
   },
-  module_en=std.extend(
-   require("hoofcushion.schema.english").translator,
-   {tag="english"}
-  ),
  },
  {
   schema={
@@ -95,17 +101,20 @@ local schema=std.extend(
     std.tbl.insert_at(self,"lua_processor@*reverse_pro*processor@module_fnua_triple","recognizer",1)
    end,
    translators={
-    "lua_translator@*ts_cn_triple.fnua@module_fnua_triple",
+    {
+     name="lua_translator@module_fnua_triple",
+     module=require("ts_cn_triple.fnua"),
+     option={
+      prefix="`",
+      trigger="space",
+      tag="module_fnua_triple",
+      tips="〔拼音反查〕",
+      dictionary="module_fnua_triple",
+      spelling_hints=99,
+      enable_user_dict=false,
+     },
+    },
    },
-  },
-  module_fnua_triple={
-   prefix="`",
-   trigger="space",
-   tag="module_fnua_triple",
-   tips="〔拼音反查〕",
-   dictionary="module_fnua_triple",
-   spelling_hints=99,
-   enable_user_dict=false,
   },
   recognizer={
    patterns={
