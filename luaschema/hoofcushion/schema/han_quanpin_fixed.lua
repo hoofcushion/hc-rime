@@ -17,6 +17,7 @@ local schema=std.extend(
    translators={
     {
      name="lua_translator@translator",
+     id="ts_fixed",
      module=require("ts_fixed").translator,
      option={
       initial_quality=1,

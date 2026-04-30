@@ -69,7 +69,7 @@ local parse_rules={
      end
      local module=spec.module
      if module then
-      local id=("%p"):format(module)
+      local id="exported_ module_"..(spec.id or ("%p"):format(module))
       _G[id]=module
       local prefix=name:match("^([^@]+)")
       local module_name=prefix.."@"..id.."@"..namespace

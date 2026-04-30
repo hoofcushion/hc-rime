@@ -17,6 +17,7 @@ local schema=std.extend(
    translators={
     {
      name="lua_translator@translator",
+     id="ts_cn_quanpin",
      module=require("ts_cn_quanpin").translator,
      option={
       initial_quality=1,
@@ -73,6 +74,7 @@ local schema=std.extend(
    translators={
     {
      name="lua_translator@module_en",
+     id="ts_en",
      module=require("ts_en").translator,
      option=std.extend(
       LuaSchema.new(require("hoofcushion.schema.english")).info.translator,

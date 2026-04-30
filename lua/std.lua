@@ -66,6 +66,7 @@ std.serialize=function(obj)
   for _,v in ipairs(obj) do table.insert(ret,std.serialize(v)) end
  else
   for k,v in pairs(obj) do
+   local k=k
    if type(k)~="string" or not is_varname(k) then
     k="["..std.serialize(k).."]"
    end

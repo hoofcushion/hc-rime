@@ -4,12 +4,14 @@ return {
   processors=function(t)
    table.insert(t,1,{
     name="lua_processor",
+    id="user-dict-blocker",
     module=require("user-dict-blocker").processor,
    })
   end,
   filters={
    {
     name="lua_filter@"..NS.decensor,
+    id="cand-decensor",
     module=require("cand-decensor").filter,
     option={
      option_name=NS.filter_decensor,

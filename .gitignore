@@ -10,4 +10,5 @@ log.txt
 *.schema.yaml
 *.trime.yaml
 test.lua
-default.costom.yaml
+./default.custom.yaml
+./hoofcushion.trime.yaml

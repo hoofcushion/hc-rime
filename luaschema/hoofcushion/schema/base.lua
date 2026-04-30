@@ -59,18 +59,22 @@ return std.extend(
     },
     {
      name="lua_filter",
+     id="cand-continuous-len",
      module=require("cand-continuous-len").filter,
     },
     {
      name="lua_filter@100",
+     id="cand-limit",
      module=require("cand-limit").filter,
     },
     {
      name="lua_filter",
+     id="uniquifier",
      module=require("uniquifier").filter,
     },
     {
      name="lua_filter",
+     id="cand-details",
      module=require("cand-details").filter,
     },
    },
@@ -80,10 +84,12 @@ return std.extend(
     "key_binder",
     {
      name="lua_processor",
+     id="keymap",
      module=require("keymap").processor,
     },
     {
      name="lua_processor",
+     id="quick_warp",
      module=require("quick_warp").processor,
     },
     "speller",
@@ -93,6 +99,7 @@ return std.extend(
     "express_editor",
     {
      name="lua_processor@"..NS.recorder,
+     id="commit-recorder",
      module=require("commit-recorder").processor,
     },
    },
@@ -107,6 +114,7 @@ return std.extend(
     "punct_translator",
     {
      name="lua_translator@"..NS.custom_word,
+     id="custom_word",
      module=require("custom_word").translator,
      option={
       delimiter="|",
@@ -117,6 +125,7 @@ return std.extend(
     },
     {
      name="lua_translator@"..NS.custom_time,
+     id="custom_time",
      module=require("custom_time").translator,
     },
    },
@@ -217,6 +226,7 @@ return std.extend(
    filters={
     {
      name="lua_filter@"..NS.filter_Reverse,
+     id="cand-reverse",
      module=require("cand-reverse").filter,
      option={
       option_name=NS.filter_Reverse,
@@ -224,6 +234,7 @@ return std.extend(
     },
     {
      name="lua_filter@"..NS.filter_Unicode,
+     id="cand-unicode",
      module=require("cand-unicode").filter,
      option={
       option_name=NS.filter_Unicode,
@@ -237,6 +248,7 @@ return std.extend(
    filters={
     {
      name="lua_filter",
+     id="shape-filter",
      module=require("shape-filter").filter,
     },
    },
@@ -250,6 +262,7 @@ return std.extend(
    translators={
     {
      name="lua_translator@"..NS.execute,
+     id="execute",
      module=require("execute").translator,
      option={
       initial_quality=64,
@@ -287,6 +300,7 @@ return std.extend(
    translators={
     {
      name="lua_translator@"..NS.chinese_number,
+     id="chinese_number",
      module=require("chinese_number").translator,
      option={
       initial_quality=64,
@@ -307,6 +321,7 @@ return std.extend(
    translators={
     {
      name="lua_translator@"..NS.unicode,
+     id="unicode",
      module=require("unicode").translator,
      option={
       initial_quality=64,
