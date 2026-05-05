@@ -2,9 +2,6 @@
 local color_strref=setmetatable({},{__index=function(_,k) return k end})
 ---@type hoofcushion.trime.preset_keys
 local preset_keys_strref=setmetatable({},{__index=function(_,k) return k end})
-local ratio_config={
- default={0.8,0.8,1,1,1,1,0.8},
-}
 local offset_config={
  keyboard={
   key_hint_offset_x=0,
@@ -74,6 +71,48 @@ local function walk(t,f)
   end
  end
 end
+local function list_concat(...)
+ local result={}
+ for i=1,select("#",...) do
+  local t=select(i,...)
+  if type(t)=="table" then
+   for _,v in ipairs(t) do
+    table.insert(result,v)
+   end
+  else
+   table.insert(result,t)
+  end
+ end
+ return result
+end
+
+local function negative_index(t,i)
+ if i<0 then
+  return #t+i+1
+ else
+  return i
+ end
+end
+
+local function list_slice(t,i,e)
+ local result={}
+ local start=negative_index(t,i or 1)
+ local end_idx=negative_index(t,e or #t)
+ for idx=start,end_idx do
+  table.insert(result,t[idx])
+ end
+ return result
+end
+
+local function list_slice_copy(t,i,e)
+ local result={}
+ local start=negative_index(t,i or 1)
+ local end_idx=negative_index(t,e or #t)
+ for idx=start,end_idx do
+  table.insert(result,deepcopy(t[idx]))
+ end
+ return result
+end
 local fns={}
 local function defer(fn)
  table.insert(fns,fn)
@@ -90,30 +129,51 @@ local M={
  name="hoofcushion",
  trime="hoofcushion",
  author="hoofcushion",
- -- 键盘样式配置
- style=Trime.style,
+ style=merge(Trime.style,{
+  keyboard={".default","default","default_landscape","number","number_landscape"},
+  comment_on_top=true,
+  -- ========== 字体大小 ==========
+  key_text_size=18,       -- 按键主文字
+  label_text_size=18,     -- 按键底部标签（如笔画/拼音提示）
+  candidate_text_size=18, -- 候选词文字
+  comment_text_size=16,   -- 候选词注释（编码提示）
+  key_long_text_size=14,  -- 长按键主文字
+  preview_text_size=40,   -- 按键预览字符
+  symbol_text_size=10,    -- 符号键盘文字
 
- preedit=Trime.preedit,
- -- 候选窗口（悬浮窗）参数
- window=Trime.window,
+  -- ========== 字体文件 ==========
+  text_font="latin.ttf",      -- 主文字体
+  label_font="label.ttf",     -- 标签字体
+  candidate_font="han.ttf",   -- 候选词中文字体
+  comment_font="comment.ttf", -- 注释字体
+  latin_font="latin.ttf",     -- 拉丁字母字体
+  hanb_font="hanb.ttf",       -- 汉字粗体字体
+  symbol_font="symbol.ttf",   -- 符号字体
+  keyboard_padding=10,
+  keyboard_padding_land=60,
+ }),
+
+ preedit=merge(Trime.preedit,{
+  foreground={
+   font_size=16, -- 编码区文字大小
+  },
+ }),
+
+ window=merge(Trime.window,{
+  foreground={
+   text_font_size=18,    -- 候选词文字大小
+   comment_font_size=16, -- 候选词注释大小
+   label_font_size=18,   -- 候选词序号/标签大小
+  },
+ }),
 }
-local text_size_factor=0.75
-defer(function()
- walk(M.style,function(t,k,v)
-  if string.find(k,"text_size",nil,true)~=nil
-  or string.find(k,"font_size",nil,true)~=nil
-  then
-   t[k]=math.max(0.1,v*text_size_factor)
-  end
- end)
-end)
 ---@class hoofcushion.trime.colors
 M.fallback_colors=Trime.fallback_colors
 local function c(str)
  return "0x"..str:sub(2)
 end
 ---@type table<string,hoofcushion.trime.colors>
-M.preset_color_schemes=merge(Trime.preset_color_schemes,{
+M.preset_color_schemes=merge({
  default_light={
   name                        ="默认",
   back_color                  =c("#e4e7e9"),
@@ -125,16 +185,13 @@ M.preset_color_schemes=merge(Trime.preset_color_schemes,{
   hilited_candidate_back_color=c("#d3d7da"),
   hilited_candidate_text_color=c("#000000"),
   hilited_comment_text_color  =c("#000000"),
-  hilited_key_back_color      =c("#d3d7da"),
-  hilited_key_symbol_color    =c("#000000"),
-  hilited_key_text_color      =c("#000000"),
   hilited_off_key_back_color  =c("#d3d7da"),
   hilited_off_key_text_color  =c("#000000"),
   hilited_on_key_back_color   =c("#d3d7da"),
   hilited_on_key_text_color   =c("#000000"),
   hilited_text_color          =c("#23948e"),
   key_back_color              =c("#eceff1"),
-  key_symbol_color            =c("#5f6b73"),
+  key_symbol_color            =c("#7b868c"),
   key_text_color              =c("#37474f"),
   keyboard_back_color         =c("#ffffff"),
   label_color                 =c("#000000"),
@@ -147,24 +204,33 @@ M.preset_color_schemes=merge(Trime.preset_color_schemes,{
   shadow_color                =c("#000000"),
   text_color                  =c("#5a676e"),
   text_back_color             =c("#cce4e7".."e9"),
+  -- 显式定义按下颜色，与普通颜色一致
+  hilited_key_back_color      =c("#eceff1"),
+  hilited_key_text_color      =c("#37474f"),
+  hilited_key_symbol_color    =c("#7b868c"),
  },
  default_dark={
-  name                ="默认黑暗",
-  text_color          =c("#eeeeee"),
-  back_color          =c("#101010"),
-  off_key_text_color  =c("#eeeeee"),
-  off_key_back_color  =c("#080808"),
-
-  border_color        =c("#202020"),
-  keyboard_back_color =c("#202020"),
-  preview_back_color  =c("#202020"),
-  preview_text_color  =c("#eeeeee"),
-
-  comment_text_color  =c("#cc4488"),
-  hilited_text_color  =c("#cc4488"),
-  hilited_back_color  =c("#404040"),
-  candidate_text_color=c("#eeeeee"),
-  candidate_background=c("#202020"),
+  name                    ="默认黑暗",
+  text_color              =c("#eeeeee"),
+  back_color              =c("#101010"),
+  off_key_text_color      =c("#eeeeee"),
+  off_key_back_color      =c("#080808"),
+  border_color            =c("#202020"),
+  keyboard_back_color     =c("#202020"),
+  preview_back_color      =c("#202020"),
+  preview_text_color      =c("#eeeeee"),
+  comment_text_color      =c("#cc4488"),
+  hilited_text_color      =c("#cc4488"),
+  hilited_back_color      =c("#404040"),
+  candidate_text_color    =c("#eeeeee"),
+  candidate_background    =c("#202020"),
+  key_back_color          =c("#080808"),
+  key_text_color          =c("#eeeeee"),
+  key_symbol_color        =c("#cc4488"),
+  -- 按下颜色：改为反色
+  hilited_key_back_color  =c("#eeeeee"), -- 反色：亮色背景
+  hilited_key_text_color  =c("#080808"), -- 反色：深色文字
+  hilited_key_symbol_color=c("#080808"), -- 反色：深色符号
  },
 })
 ---@class hoofcushion.trime.preset_keys
@@ -193,7 +259,7 @@ M.preset_keys={
  Color_settings           ={functional=true,label="配色",send="SETTINGS",option="color"},
  Theme_settings           ={functional=true,label="主題",send="SETTINGS",option="theme"},
  Schema_settings          ={functional=true,label="方案",send="SETTINGS",option="schema"},
- Voice                    ={functional=true,label="语音",command="run",option="android.speech.action.RECOGNIZE_SPEECH"},
+ Voice                    ={functional=true,label="🌐",command="run",option="org.mozilla.firefox/org.mozilla.firefox.App"},
  Hide                     ={functional=true,label="隐藏",send="BACK"},
  Keyboard_number          ={functional=true,label="数字",send="Eisu_toggle",select="number"},
  Keyboard_default         ={functional=true,label="字母",send="Eisu_toggle",select="default"},
@@ -208,6 +274,7 @@ M.preset_keys={
  liquid_keyboard_switch   ={functional=true,label="更多",send="function",command="liquid_keyboard",option="更多"},
  liquid_keyboard_exit     ={functional=true,label="返回",send="function",command="liquid_keyboard",option="-1"},
  liquid_keyboard_clipboard={functional=true,label="剪贴",send="function",command="liquid_keyboard",option="剪贴"},
+
  asciitilde               ={functional=false,label="~",send="~"},
  grave                    ={functional=false,label="`",send="`"},
  exclam                   ={functional=false,label="!",send="!"},
@@ -227,6 +294,7 @@ M.preset_keys={
  Tab_char                 ={functional=false,label="\\t",send="\t"},
  Tab                      ={functional=false,label="Tab",send="\t"},
  delimiter                ={functional=false,label="'",send="'"},
+ space                    =nil,
  pairs_paren              ={functional=false,label="()",text="(){Left}"},
  pairs_bracket            ={functional=false,label="[]",text="[]{Left}"},
  pairs_brace              ={functional=false,label="{}",text="{}{Left}"},
@@ -406,94 +474,15 @@ defer(function()
   end
  end
 end)
-M.preset_keyboards.default={
- name="默认",
- ascii_mode=0,
- lock=true,
- width=10,
- offsets=offset_config.keyboard,
- height_ratio=ratio_config.default,
- keys={
-  {width=0},
-  merge(key_specs.key_1),
-  merge(key_specs.key_2),
-  merge(key_specs.key_3),
-  merge(key_specs.key_4),
-  merge(key_specs.key_5),
-  merge(key_specs.key_home),
-  merge(key_specs.key_up),
-  merge(key_specs.key_end),
-  merge(key_specs.key_page_up),
-  merge(key_specs.key_backspace_1),
-  {width=0},
-  merge(key_specs.key_6),
-  merge(key_specs.key_7),
-  merge(key_specs.key_8),
-  merge(key_specs.key_9),
-  merge(key_specs.key_0),
-  merge(key_specs.key_left),
-  merge(key_specs.key_down),
-  merge(key_specs.key_right),
-  merge(key_specs.key_page_down),
-  merge(key_specs.key_delete),
-  {width=0},
-  merge(key_specs.key_q),
-  merge(key_specs.key_w),
-  merge(key_specs.key_e),
-  merge(key_specs.key_r),
-  merge(key_specs.key_t),
-  merge(key_specs.key_y),
-  merge(key_specs.key_u),
-  merge(key_specs.key_i),
-  merge(key_specs.key_o),
-  merge(key_specs.key_p),
-  {width=0},
-  {width=5},
-  merge(key_specs.key_a),
-  merge(key_specs.key_s),
-  merge(key_specs.key_d),
-  merge(key_specs.key_f),
-  merge(key_specs.key_g),
-  merge(key_specs.key_h),
-  merge(key_specs.key_j),
-  merge(key_specs.key_k),
-  merge(key_specs.key_l),
-  {width=5},
-  {width=0},
-  merge(key_specs.key_shift,{width=15}),
-  merge(key_specs.key_z),
-  merge(key_specs.key_x),
-  merge(key_specs.key_c),
-  merge(key_specs.key_v),
-  merge(key_specs.key_b),
-  merge(key_specs.key_n),
-  merge(key_specs.key_m),
-  merge(key_specs.key_backspace_2,{width=15}),
-  {width=0},
-  merge(key_specs.key_keyboard_number,{width=20}),
-  merge(key_specs.key_comma,{width=15}),
-  merge(key_specs.key_space,{width=30}),
-  merge(key_specs.key_period,{width=15}),
-  merge(key_specs.key_return,{width=20}),
-  {width=0},
-  merge(key_specs.status_mode),
-  merge(key_specs.status_shape),
-  merge(key_specs.status_simp),
-  merge(key_specs.status_punct),
-  merge(key_specs.status_deploy),
-  merge(key_specs.status_menu),
-  merge(key_specs.status_settings),
-  merge(key_specs.status_color),
-  merge(key_specs.status_theme),
-  merge(key_specs.status_schema),
- },
+local size_config={
+ keyboard_height=250,
+ keyboard_height_land=20,
+ keyboard_ratio={0.6,0.6,1,1,1,1,0.6},
+ keyboard_ratio_land={1,1,1,0.6,0.6},
 }
-M.preset_keyboards.number={
- name="数字",
- width=10,
- offsets=offset_config.keyboard,
- height_ratio=ratio_config.default,
- keys={
+local keyboard_lines={
+ -- ===== default 键盘的行 =====
+ number_navigate_1={
   key_specs.key_1,
   key_specs.key_2,
   key_specs.key_3,
@@ -504,6 +493,8 @@ M.preset_keyboards.number={
   key_specs.key_end,
   key_specs.key_page_up,
   key_specs.key_backspace_1,
+ },
+ number_navigate_2={
   key_specs.key_6,
   key_specs.key_7,
   key_specs.key_8,
@@ -514,14 +505,53 @@ M.preset_keyboards.number={
   key_specs.key_right,
   key_specs.key_page_down,
   key_specs.key_delete,
-  merge({click="%"}),merge({click="^"}),merge({click=1},{width=20}),merge({click=2},{width=20}),merge({click=3},{width=20}),merge({click="+"}),merge({click="-"}),
-  merge({click="!"}),merge({click="|"}),merge({click=4},{width=20}),merge({click=5},{width=20}),merge({click=6},{width=20}),merge({click="*"}),merge({click="/"}),
-  merge({click="("}),merge({click=")"}),merge({click=7},{width=20}),merge({click=8},{width=20}),merge({click=9},{width=10}),merge({click=0},{width=10}),merge({click="="}),merge(key_specs.key_backspace_2,{width=10}),
-  merge(key_specs.key_keyboard_back,{width=20}),
+ },
+ letter_row_1={
+  key_specs.key_q,
+  key_specs.key_w,
+  key_specs.key_e,
+  key_specs.key_r,
+  key_specs.key_t,
+  key_specs.key_y,
+  key_specs.key_u,
+  key_specs.key_i,
+  key_specs.key_o,
+  key_specs.key_p,
+ },
+ letter_row_2={
+  {width=5},
+  key_specs.key_a,
+  key_specs.key_s,
+  key_specs.key_d,
+  key_specs.key_f,
+  merge(key_specs.key_g,{width=5}),
+  merge(key_specs.key_g,{width=5}),
+  key_specs.key_h,
+  key_specs.key_j,
+  key_specs.key_k,
+  key_specs.key_l,
+  {width=5},
+ },
+ letter_row_3={
+  merge(key_specs.key_shift,{width=15}),
+  key_specs.key_z,
+  key_specs.key_x,
+  key_specs.key_c,
+  merge(key_specs.key_v,{width=5}),
+  merge(key_specs.key_v,{width=5}),
+  key_specs.key_b,
+  key_specs.key_n,
+  key_specs.key_m,
+  merge(key_specs.key_backspace_2,{width=15}),
+ },
+ bottom_row={
+  merge(key_specs.key_keyboard_number,{width=20}),
   merge(key_specs.key_comma,{width=15}),
   merge(key_specs.key_space,{width=30}),
   merge(key_specs.key_period,{width=15}),
   merge(key_specs.key_return,{width=20}),
+ },
+ status_row={
   key_specs.status_mode,
   key_specs.status_shape,
   key_specs.status_simp,
@@ -531,25 +561,140 @@ M.preset_keyboards.number={
   key_specs.status_settings,
   key_specs.status_color,
   key_specs.status_theme,
-  key_specs.status_schema,
-  -- keys.key_line,
+  key_specs.status_voice,
+ },
+
+ -- ===== number 键盘的行 =====
+ number_row_1={
+  merge({click="%"}),merge({click="^"}),merge({click=1},{width=20}),merge({click=2},{width=20}),merge({click=3},{width=20}),merge({click="+"}),merge({click="-"}),
+ },
+ number_row_2={
+  merge({click="!"}),merge({click="|"}),merge({click=4},{width=20}),merge({click=5},{width=20}),merge({click=6},{width=20}),merge({click="*"}),merge({click="/"}),
+ },
+ number_row_3={
+  merge({click="("}),merge({click=")"}),merge({click=7},{width=20}),merge({click=8},{width=20}),merge({click=9},{width=10}),merge({click=0},{width=10}),merge({click="="}),merge(key_specs.key_backspace_2,{width=10}),
+ },
+ number_bottom_row={
+  merge(key_specs.key_keyboard_back,{width=20}),
+  merge(key_specs.key_comma,{width=15}),
+  merge(key_specs.key_space,{width=30}),
+  merge(key_specs.key_period,{width=15}),
+  merge(key_specs.key_return,{width=20}),
+ },
+ number_status_row={
+  key_specs.status_mode,
+  key_specs.status_shape,
+  key_specs.status_simp,
+  key_specs.status_punct,
+  key_specs.status_deploy,
+  key_specs.status_menu,
+  key_specs.status_settings,
+  key_specs.status_color,
+  key_specs.status_theme,
+  key_specs.status_voice,
  },
 }
+-- ===== default 键盘 =====
+M.preset_keyboards.default={
+ name="默认",
+ ascii_mode=0,
+ lock=true,
+ width=10,
+ offsets=offset_config.keyboard,
+ height=size_config.keyboard_height,
+ height_ratio=size_config.keyboard_ratio,
+ landscape_keyboard="default_landscape",
+ keys=list_concat(
+  keyboard_lines.number_navigate_1,
+  keyboard_lines.number_navigate_2,
+  keyboard_lines.letter_row_1,
+  keyboard_lines.letter_row_2,
+  keyboard_lines.letter_row_3,
+  keyboard_lines.bottom_row,
+  keyboard_lines.status_row
+ ),
+}
+-- ===== default 横屏键盘 =====
+M.preset_keyboards.default_landscape={
+ name="默认-横屏",
+ ascii_mode=0,
+ lock=true,
+ width=10,
+ offsets=offset_config.keyboard,
+ height=size_config.keyboard_height_land,
+ height_ratio=size_config.keyboard_ratio_land,
+ landscape_split_percent=33,
+ keys=list_concat(
+  keyboard_lines.letter_row_1,
+  keyboard_lines.letter_row_2,
+  keyboard_lines.letter_row_3,
+  keyboard_lines.bottom_row,
+  keyboard_lines.status_row
+ ),
+}
+-- ===== number 键盘 =====
+M.preset_keyboards.number={
+ name="数字",
+ width=10,
+ offsets=offset_config.keyboard,
+ height=size_config.keyboard_height,
+ height_ratio=size_config.keyboard_ratio,
+ landscape_keyboard="number_landscape",
+ keys=list_concat(
+  keyboard_lines.number_navigate_1,
+  keyboard_lines.number_navigate_2,
+  keyboard_lines.number_row_1,
+  keyboard_lines.number_row_2,
+  keyboard_lines.number_row_3,
+  keyboard_lines.number_bottom_row,
+  keyboard_lines.number_status_row
+ ),
+}
+-- ===== number 横屏键盘 =====
+M.preset_keyboards.number_landscape={
+ name="数字-横屏",
+ width=10,
+ offsets=offset_config.keyboard,
+ height=size_config.keyboard_height_land,
+ height_ratio=size_config.keyboard_ratio_land,
+ landscape_split_percent=33,
+ keys=list_concat(
+  keyboard_lines.number_row_1,
+  keyboard_lines.number_row_2,
+  keyboard_lines.number_row_3,
+  keyboard_lines.number_bottom_row,
+  keyboard_lines.number_status_row
+ ),
+}
+-- 后处理
+--
 -- 删除所有按键的滑动、长按和长按标签功能
 -- defer(function()
--- walk(M.preset_keyboards, function(t, k, v)
--- if type(k) == "number" and type(v) == "table" then
--- -- 删除滑动相关
--- v.swipe_left = nil
--- v.swipe_right = nil
--- v.swipe_up = nil
--- v.swipe_down = nil
--- -- 删除长按相关
--- v.long_click = nil
--- -- 删除长按标签
--- v.label_symbol = nil
--- end
+--  walk(M.preset_keyboards,function(t,k,v)
+--   if type(k)=="number" and type(v)=="table" then
+--    -- 删除滑动相关
+--    v.swipe_left=nil
+--    v.swipe_right=nil
+--    v.swipe_up=nil
+--    v.swipe_down=nil
+--    -- 删除长按相关
+--    v.long_click=nil
+--    -- 删除长按标签
+--    v.label_symbol=nil
+--   end
+--  end)
 -- end)
+--
+-- 全局字体尺寸乘数
+-- local text_size_factor=1
+-- defer(function()
+--  walk(M.style,function(t,k,v)
+--   if string.find(k,"text_size",nil,true)~=nil
+--   or string.find(k,"font_size",nil,true)~=nil
+--   then
+--    t[k]=math.max(0.1,v*text_size_factor)
+--   end
+--  end)
 -- end)
 run()
 return M
