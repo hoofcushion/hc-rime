@@ -69,6 +69,9 @@ local parse_rules={
      end
      local module=spec.module
      if module then
+      if not spec.id then
+       std.print(spec)
+      end
       local id="exported_ module_"..(spec.id or ("%p"):format(module))
       _G[id]=module
       local prefix=name:match("^([^@]+)")
@@ -119,9 +122,14 @@ function LuaSchema:write()
   rime_api:get_user_data_dir(),
   ("%s.%s.yaml"):format(self.name,self.type)
  )
- std.io.open(path,"w")
-  :write(json.encode(self.info))
-  :close()
+ local ok,content=pcall(function()
+  return json.encode(self.info)
+ end)
+ if ok then
+  std.io.open(path,"w")
+   :write(content)
+   :close()
+ end
 end
 function LuaSchema.load(tbl)
  LuaSchema.new(tbl):write()

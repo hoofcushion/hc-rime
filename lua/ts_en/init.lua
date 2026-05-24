@@ -53,4 +53,7 @@ function T.init(env)
  is_module=env.name_space~="translator"
  T.func=is_module and fmodule or fmain
 end
+function T.func(env,...)
+ return T.func(env,...)
+end
 return M

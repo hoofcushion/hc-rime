@@ -6,7 +6,7 @@ local schema=std.extend(
  require("hoofcushion.speller.fixed.hoofcushion"),
  {
   schema={
-   schema_id="ts_cn_double",
+   schema_id=NS.ts_cn_double,
    name="定长拼音",
    description=[[
 汉语输入方案之定长
@@ -68,13 +68,14 @@ local schema=std.extend(
  {
   schema={
    dependencies={
-    "ts_en",
+    NS.ts_en,
    },
   },
   engine={
    translators={
     {
      name="lua_translator@module_en",
+     id=NS.ts_en,
      module=require("ts_en").translator,
      option=std.extend(
       LuaSchema.new(require("hoofcushion.schema.english")).info.translator,
@@ -124,6 +125,7 @@ local schema=std.extend(
    translators={
     {
      name="lua_translator@module_fnua_cn",
+     id="module_fnua_cn",
      module=require("ts_cn_double.fnua"),
      option={
       prefix="`",

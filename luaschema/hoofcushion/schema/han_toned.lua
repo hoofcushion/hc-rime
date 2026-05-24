@@ -69,13 +69,14 @@ local schema=std.extend(
  {
   schema={
    dependencies={
-    "ts_en",
+    NS.ts_en,
    },
   },
   engine={
    translators={
     {
      name="lua_translator@module_en",
+     id=NS.ts_en,
      module=require("ts_en").translator,
      option=std.extend(
       LuaSchema.new(require("hoofcushion.schema.english")).info.translator,

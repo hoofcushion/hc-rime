@@ -76,6 +76,22 @@ std.serialize=function(obj)
  end
  return "{"..table.concat(ret,",").."}"
 end
+std.table_filter=function(t,fn)
+ local r={}
+ for k,v in pairs(t) do
+  if fn(k,v) then
+   if type(v)=="table" then
+    local filtered=std.table_filter(v,fn)
+    if next(filtered)~=nil then -- 非空才保留
+     r[k]=filtered
+    end
+   else
+    r[k]=v
+   end
+  end
+ end
+ return r
+end
 ---@param ... any
 std.print=function(...)
  local args={...}
@@ -125,6 +141,26 @@ std.tbl.toset=function(list)
  local set={}
  for _,v in ipairs(list) do set[v]=true end
  return set
+end
+---@generic K, V
+---@param t table<K, V>
+---@return K[]
+std.tbl.keys=function(t)
+ local ret={}
+ for k,_ in pairs(t) do
+  table.insert(ret,k)
+ end
+ return ret
+end
+---@generic K, V
+---@param t table<K, V>
+---@return V[]
+std.tbl.values=function(t)
+ local ret={}
+ for _,v in pairs(t) do
+  table.insert(ret,v)
+ end
+ return ret
 end
 ---@param tbl table
 ---@return integer
